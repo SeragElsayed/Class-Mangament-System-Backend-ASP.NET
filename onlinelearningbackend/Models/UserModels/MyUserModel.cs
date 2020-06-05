@@ -10,7 +10,6 @@ namespace onlinelearningbackend.Models
     {
         public MyUserModel():base()
         {
-            Age = 0;
         }
         public MyUserModel(string UserName):base(UserName)
         {
@@ -18,8 +17,13 @@ namespace onlinelearningbackend.Models
         }
         
         public string PrifleImageUrl { get; set; }
-        public string FName { get; set; }
-        public string LName { get; set; }
-        public int Age { get; set; }
+        public string City { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public virtual ICollection<TaskSolution> TaskSolutions { get; set; } = new HashSet<TaskSolution>();
+        public virtual ICollection<CourseMyUserModel> CourseMyUserModels { get; set; } = new HashSet<CourseMyUserModel>();
+        public virtual Branch Branch { get; set; }
+        public virtual Track Track { get; set; }
+
+
     }
 }

@@ -13,5 +13,15 @@ namespace onlinelearningbackend.Data
             : base(options)
         {
         }
+
+        public virtual DbSet<Branch> Branches { get; set; }
+        public virtual DbSet<Course> Courses { get; set; }
+        public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<TaskSolution> TaskSolutions { get; set; }
+        public virtual DbSet<Topic> Topics { get; set; }
+        public virtual DbSet<Track> Tracks { get; set; }
+        public virtual DbSet<TextMaterial> TextMaterials { get; set; }
+        public virtual DbSet<VideoMaterial> VideoMaterials { get; set; }
+        public virtual DbSet<LinkMaterial> LinkMaterials { get; set; }
     }
 }
