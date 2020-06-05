@@ -9,6 +9,7 @@ namespace onlinelearningbackend.Models
     {
         public int TrackId { get; set; }
         public string TrackName { get; set; }
+        public Branch Branch { get; set; }
         public virtual ICollection<MyUserModel> MyUserModels { get; set; } = new HashSet<MyUserModel>();
         public virtual ICollection<Course> Courses { get; set; } = new HashSet<Course>();
 

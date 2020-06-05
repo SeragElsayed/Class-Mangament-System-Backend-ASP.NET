@@ -12,5 +12,6 @@ namespace onlinelearningbackend.Models
         public string BranchEmail { get; set; }
         public string BranchTelephone { get; set; }
         public virtual ICollection<MyUserModel> MyUserModels { get; set; } = new HashSet<MyUserModel>();
+        public virtual ICollection<Track> Tracks { get; set; } = new HashSet<Track>();
     }
 }
