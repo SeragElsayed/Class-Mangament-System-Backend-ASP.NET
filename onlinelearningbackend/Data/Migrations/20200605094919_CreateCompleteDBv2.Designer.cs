@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlinelearningbackend.Data;
 
 namespace onlinelearningbackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200605094919_CreateCompleteDBv2")]
+    partial class CreateCompleteDBv2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -438,15 +440,10 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TrackName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TrackId");
-
-                    b.HasIndex("BranchId");
 
                     b.ToTable("Tracks");
                 });
@@ -592,13 +589,6 @@ namespace onlinelearningbackend.Data.Migrations
                     b.HasOne("onlinelearningbackend.Models.Course", "Course")
                         .WithMany("TextMaterials")
                         .HasForeignKey("CourseId");
-                });
-
-            modelBuilder.Entity("onlinelearningbackend.Models.Track", b =>
-                {
-                    b.HasOne("onlinelearningbackend.Models.Branch", "Branch")
-                        .WithMany("Tracks")
-                        .HasForeignKey("BranchId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.VideoMaterial", b =>

@@ -56,13 +56,13 @@ namespace onlinelearningbackend
 
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultUI()
+               // .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
             services.AddCors();
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+           // services.AddControllersWithViews();
+            //services.AddRazorPages();
 
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSetting:JWT_Secret"].ToString());
                     //Encoding.UTF8.GetBytes("MySecretKey")   ;
@@ -128,7 +128,7 @@ namespace onlinelearningbackend
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                //endpoints.MapRazorPages();
                 
             });
         }

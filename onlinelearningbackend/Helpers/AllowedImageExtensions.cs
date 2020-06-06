@@ -7,6 +7,10 @@ namespace onlinelearningbackend
 {
     public static class AllowedImageExtensions
     {
-        public static string AllowedExtensions = "jpgpng";
+        private static string AllowedExtensions = "jpgpng";
+        public static bool IsImageExtensionAllowed(string imageExtension)
+        {
+            return AllowedExtensions.Contains(imageExtension);
+        }
     }
 }

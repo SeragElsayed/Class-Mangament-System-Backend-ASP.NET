@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace onlinelearningbackend.Models
 {
-    public class Class//:ihttpmodule
+    public class UserLoginModel:MyUserModel
     {
+        public string Password { get; set; }
     }
 }

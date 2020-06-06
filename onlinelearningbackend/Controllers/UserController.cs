@@ -14,8 +14,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using System.Net.Http.Headers;
-//using System.Web.Http;
-//using System.Web.Http;
+using onlinelearningbackend.Helpers;
 
 namespace onlinelearningbackend.Controllers
 {
@@ -52,47 +51,32 @@ namespace onlinelearningbackend.Controllers
             bool IsInfoValid = NewUser.UserName != null && NewUser.Password != null;
             bool IsImageUploaded = file.Length > 0;
 
-            if (IsInfoValid)
-            {
-                if (IsImageUploaded)
+            if (  IsInfoValid== false)
                 {
-                    var folderName = Path.Combine("Resources", "ProfilePictures");
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                    var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fileExtension = uploadedfilename.Substring(uploadedfilename.Length - 3).ToLower();
-                    bool IsImgExtAllowed = AllowedImageExtensions.AllowedExtensions.Contains(fileExtension);
-                    if (IsImgExtAllowed)
-                    {
-                        var fileName = $"{NewUser.UserName}.{fileExtension}";
-                        var fullPath = Path.Combine(pathToSave, fileName);
-                        var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
-                        NewUser.PrifleImageUrl = dbPath;
-                        using (var stream = new FileStream(fullPath, FileMode.Create))
-                        {
-                            file.CopyTo(stream);
-                        }
-
-                        var result = await _userManager.CreateAsync(NewUser, NewUser.Password);
-                        return Ok(result);
-                    }
-                    else
-                    {
-                        return BadRequest(new { message = "image extension must be jpg or png" });
-
-                    }
-
+                    return BadRequest(new { message = "invalid registration info" });
                 }
-                else  
+            if (  IsImageUploaded==  false)
                 {
-                    var result = await _userManager.CreateAsync(NewUser, NewUser.Password);
-                    return Ok(result);
+                    var user = await _userManager.CreateAsync(NewUser, NewUser.Password);
+                    return Ok(user);
                 }
-            }
-            else
+
+            var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var IsImgExtAllowed = FSHelpers.IsImageExtensionAllowed(uploadedfilename);
+            if (IsImgExtAllowed == false)
             {
-                return BadRequest(new { message = "invalid registration info" });
+                return BadRequest(new { message = "Image extensions allowed are jPG and PNG only " });
 
             }
+            var dbImagePath = FSHelpers.SaveProfileImage(NewUser, uploadedfilename, file);
+            
+            
+
+            NewUser.PrifleImageUrl = dbImagePath;
+
+            var result = await _userManager.CreateAsync(NewUser, NewUser.Password);
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -125,9 +109,53 @@ namespace onlinelearningbackend.Controllers
             return new
             {
                 UserData.UserName,
-                UserData.Age,
                 UserData.PrifleImageUrl
                 
+            };
+        }
+        [HttpPut]
+        [Route("api/user/Profile")]
+        [Authorize]
+        // Get api/user/profile 
+        public async Task<Object> PatchProfile([FromForm]UserPatchProfileModel EditedUser)
+        {
+            var file = Request.Form.Files[0];
+            bool IsInfoValid = EditedUser.UserName != null ;
+            bool IsImageUploaded = file.Length > 0; 
+            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
+            var UserInDB = await _userManager.FindByIdAsync(UserId);
+            string oldImagePath = UserInDB.PrifleImageUrl;
+            UserInDB.UserName = EditedUser.UserName;
+
+            if (!IsInfoValid)
+            {
+                return BadRequest(new { message = "invalid Edited info" });
+            }
+            if (!IsImageUploaded)
+            {
+                var user = await _userManager.UpdateAsync(UserInDB);
+                return Ok(user);
+            }
+
+            var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var dbImagePath = FSHelpers.SaveProfileImage(UserInDB, uploadedfilename, file);
+            FSHelpers.DeleteOldImage(oldImagePath);
+
+            if (dbImagePath == null)
+            {
+                return BadRequest(new { message = dbImagePath });
+            }
+
+            UserInDB.PrifleImageUrl = dbImagePath;
+
+            var result = await _userManager.UpdateAsync(UserInDB);
+
+            //return Ok(result);
+            return new
+            {
+                UserInDB.UserName,
+                UserInDB.PrifleImageUrl
+
             };
         }
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlinelearningbackend.Data;
 
 namespace onlinelearningbackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200605093942_CreateCompleteDB")]
+    partial class CreateCompleteDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,7 +168,7 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<DateTime>("StartingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("TopicId")
+                    b.Property<int>("TopicId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TrackId")
@@ -188,7 +190,7 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CourseId")
+                    b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<string>("MyUserModelId")
@@ -264,7 +266,7 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BranchId")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("City")
@@ -313,7 +315,7 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TrackId")
+                    b.Property<int>("TrackId")
                         .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -438,15 +440,10 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TrackName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TrackId");
-
-                    b.HasIndex("BranchId");
 
                     b.ToTable("Tracks");
                 });
@@ -529,7 +526,9 @@ namespace onlinelearningbackend.Data.Migrations
                 {
                     b.HasOne("onlinelearningbackend.Models.Topic", "Topic")
                         .WithMany("Courses")
-                        .HasForeignKey("TopicId");
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("onlinelearningbackend.Models.Track", "Track")
                         .WithMany("Courses")
@@ -540,7 +539,9 @@ namespace onlinelearningbackend.Data.Migrations
                 {
                     b.HasOne("onlinelearningbackend.Models.Course", "Course")
                         .WithMany("CourseMyUserModels")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("onlinelearningbackend.Models.MyUserModel", "MyUserModel")
                         .WithMany("CourseMyUserModels")
@@ -558,11 +559,15 @@ namespace onlinelearningbackend.Data.Migrations
                 {
                     b.HasOne("onlinelearningbackend.Models.Branch", "Branch")
                         .WithMany("MyUserModels")
-                        .HasForeignKey("BranchId");
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("onlinelearningbackend.Models.Track", "Track")
                         .WithMany("MyUserModels")
-                        .HasForeignKey("TrackId");
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.Task", b =>
@@ -583,7 +588,7 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasForeignKey("MyUserModelId");
 
                     b.HasOne("onlinelearningbackend.Models.Task", "Task")
-                        .WithMany("TaskSolutions")
+                        .WithMany()
                         .HasForeignKey("TaskId");
                 });
 
@@ -592,13 +597,6 @@ namespace onlinelearningbackend.Data.Migrations
                     b.HasOne("onlinelearningbackend.Models.Course", "Course")
                         .WithMany("TextMaterials")
                         .HasForeignKey("CourseId");
-                });
-
-            modelBuilder.Entity("onlinelearningbackend.Models.Track", b =>
-                {
-                    b.HasOne("onlinelearningbackend.Models.Branch", "Branch")
-                        .WithMany("Tracks")
-                        .HasForeignKey("BranchId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.VideoMaterial", b =>
