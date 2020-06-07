@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using onlinelearningbackend.DAL;
 
 namespace onlinelearningbackend
 {
@@ -37,6 +38,8 @@ namespace onlinelearningbackend
         {
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
+            services.AddScoped<ICourseManager,CourseManager>();
+
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
