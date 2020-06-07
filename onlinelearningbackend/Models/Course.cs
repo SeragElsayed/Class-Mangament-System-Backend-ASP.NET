@@ -27,7 +27,7 @@ namespace onlinelearningbackend.Models
         public virtual Topic Topic { get; set; }
         public virtual Track Track { get; set; }
         public virtual ICollection<CourseMyUserModel> CourseMyUserModels { get; set; } = new HashSet<CourseMyUserModel>();
-        public virtual ICollection<Task> Tasks { get; set; } = new HashSet<Task>();
+        public virtual ICollection<TaskClass> Tasks { get; set; } = new HashSet<TaskClass>();
         public virtual ICollection<TaskSolution> TaskSolutions { get; set; } = new HashSet<TaskSolution>();
         public virtual ICollection<TextMaterial> TextMaterials { get; set; } = new HashSet<TextMaterial>();
         public virtual ICollection<VideoMaterial> VideoMaterials { get; set; } = new HashSet<VideoMaterial>();
