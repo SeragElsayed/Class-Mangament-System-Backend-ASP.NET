@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,10 +10,18 @@ namespace onlinelearningbackend.Models
     public class Course
     {
         public int CourseId { get; set; }
+        [Required]
         public string CourseName { get; set; }
+        [Required]
+
         public string Description { get; set; }
+
+        [Required]
+
         public int IntervalInDays { get; set; }
         public DateTime StartingDate { get; set; }
+        [Required]
+
         public string EnrollmentKey { get; set; }
 
         public virtual Topic Topic { get; set; }
