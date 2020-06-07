@@ -16,7 +16,7 @@ namespace onlinelearningbackend.Data
 
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Course> Courses { get; set; }
-        public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<TaskClass> Tasks { get; set; }
         public virtual DbSet<TaskSolution> TaskSolutions { get; set; }
         public virtual DbSet<Topic> Topics { get; set; }
         public virtual DbSet<Track> Tracks { get; set; }
