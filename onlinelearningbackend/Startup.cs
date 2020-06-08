@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using onlinelearningbackend.Repository.IRepository;
+using onlinelearningbackend.Repository.Repo;
 
 namespace onlinelearningbackend
 {
@@ -32,9 +34,29 @@ namespace onlinelearningbackend
 
         public IConfiguration Configuration { get; }
 
+        string x = "hi";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //the crs problem
+            services.AddCors(options =>
+            {
+                options.AddPolicy(x,
+                builder =>
+                {
+                    // builder.WithOrigins("","")
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                });
+            });
+
+            ////////////
+            //to dependancy 
+            services.AddScoped<IProfile,Profile>();
+            services.AddScoped<IStudentDB, StudentDB>();
+            services.AddScoped<IExploreCrs, ExploreCrs>();
+            /////////////
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
 
@@ -116,7 +138,7 @@ namespace onlinelearningbackend
                 RequestPath = new PathString("/Resources")
             });
             app.UseRouting();
-
+            app.UseCors(x);
             app.UseAuthentication();
             app.UseAuthorization();
 
