@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using System.Net.Http.Headers;
 using onlinelearningbackend.Helpers;
+using onlinelearningbackend.Repo.IManager;
 
 namespace onlinelearningbackend.Controllers
 {
@@ -25,15 +26,17 @@ namespace onlinelearningbackend.Controllers
        
         private readonly UserManager<MyUserModel> _userManager;
         private readonly RoleManager<MyRoleModel> _roleManager;
-
+        IStudentManager db;
         private readonly ApplicationSetting _AppSetting;
 
         public UserController(
+            IStudentManager _db,
             UserManager<MyUserModel> userManager,
             SignInManager<MyUserModel> signInManager,
             RoleManager<MyRoleModel> roleManager,
             IOptions<ApplicationSetting> AppSetting)
         {
+            this.db = _db;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
@@ -153,5 +156,48 @@ namespace onlinelearningbackend.Controllers
             //return Ok(result);
             return  result;
         }
+
+        ///////////////////////////////////////////////////////////////////
+        /////to get student data
+        [HttpGet]
+        [Authorize]
+        [Route("api/student/crsid")]
+        public IActionResult GetStudentByCrsId(int id)
+        {
+            var stds = db.GetStudentByCrsId(id);
+            if (stds == null)
+            { return NotFound(); }
+            else
+            {
+                return Ok(stds);
+            }
+        }
+        [HttpGet]
+       
+        [Route("api/student/trackid/{id}")]
+        public IActionResult GetStudentByTrackId(int id)
+        {
+            var stds = db.GetStudentByTrackId(id);
+            if (stds == null)
+            { return NotFound(); }
+            else
+            {
+                return Ok(stds);
+            }
+        }
+        [HttpGet]
+        [Route("api/student/stdid/{id}")]
+ 
+        public IActionResult GetStudentByStdId(int id)
+        {
+            var stds = db.GetStudentByStdId(id);
+            if (stds == null)
+            { return NotFound(); }
+            else
+            {
+                return Ok(stds);
+            }
+        }
+
     }
 }

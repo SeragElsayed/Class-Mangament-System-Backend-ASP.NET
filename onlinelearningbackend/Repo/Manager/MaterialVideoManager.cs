@@ -17,7 +17,7 @@ namespace onlinelearningbackend.Manager
         }
         public IEnumerable<VideoMaterial> AddMaterial(VideoMaterial NewMaterial)
         {
-            var material = DB.VideoMaterials.FromSqlRaw("dbo.usp_VidoeMaterials_Insert {0},{1}"
+            var material = DB.VideoMaterials.FromSqlRaw("EXEC dbo.usp_VidoeMaterials_Insert {0},{1}"
                                                , NewMaterial.VideoMaterialName
                                                , NewMaterial.URL
                                                )
@@ -27,13 +27,13 @@ namespace onlinelearningbackend.Manager
 
         public IEnumerable<VideoMaterial> DeleteMaterialByMaterialId(int MaterialId)
         {
-            var material = DB.VideoMaterials.FromSqlRaw("dbo.usp_MatrialLink_Delete {0}", MaterialId).ToList<VideoMaterial>();
+            var material = DB.VideoMaterials.FromSqlRaw("EXEC dbo.usp_MatrialLink_Delete {0}", MaterialId).ToList<VideoMaterial>();
             return material;
         }
 
         public IEnumerable<VideoMaterial> EditMaterial(VideoMaterial EditMaterial)
         {
-            var material = DB.VideoMaterials.FromSqlRaw("dbo.usp_VidoeMaterials_Insert {0},{1},{2}"
+            var material = DB.VideoMaterials.FromSqlRaw("EXEC dbo.usp_VidoeMaterials_Insert {0},{1},{2}"
                                                 , EditMaterial.VideoMaterialId
                                                , EditMaterial.VideoMaterialName
                                                , EditMaterial.URL
@@ -44,7 +44,7 @@ namespace onlinelearningbackend.Manager
 
         public IEnumerable<VideoMaterial> MaterialVideotByCourseId(int CourseId)
         {
-            var material = DB.VideoMaterials.FromSqlRaw("dbo.usp_MaterialVideo_Select_by_CourseId {0}", CourseId).ToList<VideoMaterial>();
+            var material = DB.VideoMaterials.FromSqlRaw("EXEC dbo.usp_MaterialVideo_Select_by_CourseId {0}", CourseId).ToList<VideoMaterial>();
             return material;
         }
     }

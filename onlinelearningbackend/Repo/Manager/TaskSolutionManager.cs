@@ -15,17 +15,12 @@ namespace onlinelearningbackend.Manager
         {
             DB = _DB;
         }
-        public void TaskByStudent(int StudentId, int TaskId)
+        public List<TaskSolution> TaskByStudent(int StudentId, int TaskId)
         {
 
-            DB.TaskSolutions.FromSqlRaw("dbo.usp_CourseMyUserModel_Insert {0}", StudentId, TaskId).ToList<TaskSolution>();
-           
-
-
-
-
-
-
+         var tasks=   DB.TaskSolutions.FromSqlRaw("EXEC dbo.usp_CourseMyUserModel_Insert {0}", StudentId, TaskId).ToList<TaskSolution>();
+            return tasks;
+        
         }
     }
 }
