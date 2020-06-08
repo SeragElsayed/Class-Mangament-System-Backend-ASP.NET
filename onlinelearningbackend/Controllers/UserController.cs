@@ -48,7 +48,7 @@ namespace onlinelearningbackend.Controllers
         public async Task<object> PostRegister([FromForm] UserRegisterModel NewUser)
         {
             var file = Request.Form.Files[0];
-            bool IsInfoValid = NewUser.UserName != null && NewUser.Password != null;
+            bool IsInfoValid = ModelState.IsValid;
             bool IsImageUploaded = file.Length > 0;
 
             if (  IsInfoValid== false)
@@ -70,8 +70,6 @@ namespace onlinelearningbackend.Controllers
             }
             var dbImagePath = FSHelpers.SaveProfileImage(NewUser, uploadedfilename, file);
             
-            
-
             NewUser.PrifleImageUrl = dbImagePath;
 
             var result = await _userManager.CreateAsync(NewUser, NewUser.Password);
@@ -84,6 +82,12 @@ namespace onlinelearningbackend.Controllers
         //Post api/user/Login
         public async Task<IActionResult> PostLogin(UserLoginModel model)
         {
+            var IsInfoValid = ModelState.IsValid;
+            if(IsInfoValid==false)
+            {
+                return BadRequest(new { message = "Login Info not valid" });
+
+            }
             var key = Encoding.UTF8.GetBytes(_AppSetting.JWT_Secret);
             var User = await _userManager.FindByNameAsync(model.UserName);
             if(User !=null && await _userManager.CheckPasswordAsync(User, model.Password))
@@ -106,40 +110,35 @@ namespace onlinelearningbackend.Controllers
         {
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var UserData = await _userManager.FindByIdAsync(UserId);
-            return new
-            {
-                UserData.UserName,
-                UserData.PrifleImageUrl
-                
-            };
+            return UserData;
         }
         [HttpPut]
         [Route("api/user/Profile")]
         [Authorize]
         // Get api/user/profile 
-        public async Task<Object> PatchProfile([FromForm]UserPatchProfileModel EditedUser)
+        public async Task<Object> PatchProfile([FromForm]MyUserModel EditedUser)
         {
             var file = Request.Form.Files[0];
-            bool IsInfoValid = EditedUser.UserName != null ;
+            bool IsInfoValid = ModelState.IsValid ;
             bool IsImageUploaded = file.Length > 0; 
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var UserInDB = await _userManager.FindByIdAsync(UserId);
             string oldImagePath = UserInDB.PrifleImageUrl;
-            UserInDB.UserName = EditedUser.UserName;
 
-            if (!IsInfoValid)
+            //UserInDB.UserName = EditedUser.UserName;
+
+            if (IsInfoValid==false)
             {
                 return BadRequest(new { message = "invalid Edited info" });
             }
-            if (!IsImageUploaded)
+            if (IsImageUploaded==false)
             {
-                var user = await _userManager.UpdateAsync(UserInDB);
+                var user = await _userManager.UpdateAsync(EditedUser);
                 return Ok(user);
             }
 
             var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            var dbImagePath = FSHelpers.SaveProfileImage(UserInDB, uploadedfilename, file);
-            FSHelpers.DeleteOldImage(oldImagePath);
+            var dbImagePath = FSHelpers.SaveProfileImage(EditedUser, uploadedfilename, file);
 
             if (dbImagePath == null)
             {
@@ -148,15 +147,11 @@ namespace onlinelearningbackend.Controllers
 
             UserInDB.PrifleImageUrl = dbImagePath;
 
-            var result = await _userManager.UpdateAsync(UserInDB);
+            var result = await _userManager.UpdateAsync(EditedUser);
+            FSHelpers.DeleteOldImage(oldImagePath);
 
             //return Ok(result);
-            return new
-            {
-                UserInDB.UserName,
-                UserInDB.PrifleImageUrl
-
-            };
+            return  result;
         }
     }
 }

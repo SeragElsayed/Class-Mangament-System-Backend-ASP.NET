@@ -11,7 +11,7 @@ namespace onlinelearningbackend.Models
         public string TaskSolutionURL { get; set; }
         public virtual MyUserModel MyUserModel { get; set; }
         public virtual Course Course { get; set; }
-        public virtual Task Task { get; set; }
+        public virtual TaskClass Task { get; set; }
 
 
     }
