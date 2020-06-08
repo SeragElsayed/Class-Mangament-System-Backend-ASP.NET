@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace onlinelearningbackend.Repository.IRepository
+namespace onlinelearningbackend.Repo.IManager
 {
-    public interface IExploreCrs
+    public interface ITrackManager
     {
-        List<Branch> GetAllBranchs();
         List<Track> GetAllTracksByBId(int id);
-        List<Course> GetAllCrsByTId(int id);
     }
 }

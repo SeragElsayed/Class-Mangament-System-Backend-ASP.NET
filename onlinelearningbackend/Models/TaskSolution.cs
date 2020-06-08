@@ -13,6 +13,7 @@ namespace onlinelearningbackend.Models
         public virtual Course Course { get; set; }
         public virtual TaskClass Task { get; set; }
 
+        public int IsActive { get; set; } = 1;
 
     }
 }

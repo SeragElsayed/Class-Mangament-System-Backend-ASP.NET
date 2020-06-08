@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace onlinelearningbackend.Manager
+namespace onlinelearningbackend.Repo.IManager
 {
-    interface ITaskSolutionManager
+    public interface IBranchManager
     {
-        void TaskByStudent(int StudentId,int TaskId);
-
+        List<Branch> GetAllBranchs();
     }
 }

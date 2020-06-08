@@ -21,6 +21,10 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using onlinelearningbackend.DAL;
+using onlinelearningbackend.Repo.IManager;
+using onlinelearningbackend.Repo.Manager;
+using onlinelearningbackend.Manager;
+using onlinelearningbackend.Repository.Repo;
 
 namespace onlinelearningbackend
 {
@@ -39,6 +43,12 @@ namespace onlinelearningbackend
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
             services.AddScoped<ICourseManager,CourseManager>();
+            services.AddScoped<IBranchManager, BranchManager>();
+            services.AddScoped<ITrackManager, TrackManager>();
+            services.AddScoped<ITaskManager, taskManager>();
+            services.AddScoped<IMaterialLinkManager, MaterialLinkManager>();
+            services.AddScoped<IMaterialTextManager, MaterialTextManager>();
+            services.AddScoped<IMaterialVideoManager, MaterialVideoManager>();
 
 
             services.AddDbContext<ApplicationDbContext>(options =>

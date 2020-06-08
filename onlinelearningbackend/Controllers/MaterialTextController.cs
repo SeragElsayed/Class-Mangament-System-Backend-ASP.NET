@@ -8,20 +8,19 @@ using onlinelearningbackend.Models;
 
 namespace onlinelearningbackend.Controllers
 {
-    public class LinkMaterialController : Controller
+    public class MaterialTextController : Controller
     {
-        IMaterialLinkManager db;
-        public LinkMaterialController(IMaterialLinkManager _db)
+        IMaterialTextManager db;
+        public MaterialTextController(IMaterialTextManager _db)
         {
             this.db = _db;
         }
-        [HttpGet("{CourseId}")]
-        [Route("api/course/materiallink/{id}")]
- 
+        [HttpGet]
+        [Route("api/course/textmaterial/{id}")]
         public IActionResult MaterialLinktByCourseId(int id)
         {
-            var links = db.MaterialLinktByCourseId(id);
-            if(links==null)
+            var links = db.MaterialTextByCourseId(id);
+            if (links == null)
             {
                 return NotFound();
             }
@@ -31,12 +30,11 @@ namespace onlinelearningbackend.Controllers
             }
         }
         [HttpPost]
-        [Route("api/course/addmaterial")]
-
-        /////////////////////////////////////may cause error 
-        public IActionResult AddMaterial(LinkMaterial k)
+        [Route("api/course/addtextmaterial")]
+        /////////////////////////may cause error 
+        public IActionResult AddMaterial(TextMaterial k)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest("enter the whole data please");
             }
@@ -45,10 +43,9 @@ namespace onlinelearningbackend.Controllers
 
         }
         [HttpPost]
-        [Route("api/course/editmaterial")]
-
-        /////////////////////////////////////////////may cause error
-        public IActionResult EditMaterial(LinkMaterial k)
+        [Route("api/course/edittextmaterial")]
+        ///////////////////////////////may cause error 
+        public IActionResult EditMaterial(TextMaterial k)
         {
             if (!ModelState.IsValid)
             {
@@ -59,15 +56,14 @@ namespace onlinelearningbackend.Controllers
 
         }
         [HttpGet]
-        [Route("api/course/deletematerial/{MId}")]
+        [Route("api/course/deletetextmaterial/{MId}")]
         public IActionResult DeleteMaterialByMaterialId(int MId)
         {
             db.DeleteMaterialByMaterialId(MId);
-          
+
 
             return Ok();
 
         }
-     
     }
 }
