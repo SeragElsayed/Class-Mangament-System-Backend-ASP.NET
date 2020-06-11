@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlinelearningbackend.Data;
 
 namespace onlinelearningbackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200609193009_addingMaterialModel")]
+    partial class addingMaterialModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,18 +196,17 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<string>("PathOnServer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CourseMaterialModels");
+                    b.ToTable("CourseMaterialModel");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.CourseMyUserModel", b =>
@@ -586,9 +587,7 @@ namespace onlinelearningbackend.Data.Migrations
                 {
                     b.HasOne("onlinelearningbackend.Models.Course", "Course")
                         .WithMany("CourseMaterialModels")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.CourseMyUserModel", b =>

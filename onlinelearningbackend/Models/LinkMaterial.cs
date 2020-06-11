@@ -10,7 +10,6 @@ namespace onlinelearningbackend.Models
         public int LinkMaterialId { get; set; }
         public string LinkMaterialName { get; set; }
         public string URL { get; set; }
-
         public virtual Course Course { get; set; }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlinelearningbackend.Data;
 
 namespace onlinelearningbackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200608150628_TextMaterial")]
+    partial class TextMaterial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,27 +187,6 @@ namespace onlinelearningbackend.Data.Migrations
                     b.HasIndex("TrackId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("onlinelearningbackend.Models.CourseMaterialModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PathOnServer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("CourseMaterialModels");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.CourseMyUserModel", b =>
@@ -443,14 +424,14 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("TextMaterialName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("URL")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
 
                     b.HasKey("TextMaterialId");
 
@@ -580,15 +561,6 @@ namespace onlinelearningbackend.Data.Migrations
                     b.HasOne("onlinelearningbackend.Models.Track", "Track")
                         .WithMany("Courses")
                         .HasForeignKey("TrackId");
-                });
-
-            modelBuilder.Entity("onlinelearningbackend.Models.CourseMaterialModel", b =>
-                {
-                    b.HasOne("onlinelearningbackend.Models.Course", "Course")
-                        .WithMany("CourseMaterialModels")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.CourseMyUserModel", b =>

@@ -12,6 +12,7 @@ namespace onlinelearningbackend.Manager
         IEnumerable<TextMaterial> AddMaterial(TextMaterial NewMaterial);
         IEnumerable<TextMaterial> EditMaterial(TextMaterial EditMaterial);
         IEnumerable<TextMaterial> DeleteMaterialByMaterialId(int MaterialId);
+     
 
     }
 }

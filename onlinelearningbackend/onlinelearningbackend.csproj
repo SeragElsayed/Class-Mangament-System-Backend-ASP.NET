@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-onlinelearningbackend-6DE0B308-207A-4EF6-9F5E-A64BF94DE1B7</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\uploads\1.jpg" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
@@ -25,6 +29,11 @@
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Resources\ProfilePictures\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\uploads\1.jpg" />
   </ItemGroup>
 
 </Project>
