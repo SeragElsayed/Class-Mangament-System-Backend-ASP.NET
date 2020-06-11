@@ -1,8 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using onlinelearningbackend.Helpers;
 using onlinelearningbackend.Manager;
 using onlinelearningbackend.Models;
 
@@ -15,46 +22,58 @@ namespace onlinelearningbackend.Controllers
         {
             this.db = _db;
         }
-        [HttpGet]
-        [Route("api/course/textmaterial/{id}")]
-        public IActionResult MaterialLinktByCourseId(int id)
+
+        [HttpPost]
+        [Route("api/course/addtextmaterial")]
+        [Authorize]
+        public IActionResult AddMaterial([FromForm] TextMaterial Material )
         {
-            var links = db.MaterialTextByCourseId(id);
-            if (links == null)
+          
+                var file = Request.Form.Files[0];
+                bool IsInfoValid = ModelState.IsValid;
+                bool IsImageUploaded = file.Length > 0;
+
+                if (IsInfoValid == false)
+                {
+                    return BadRequest(new { message = "invalid material info" });
+                }
+             
+                var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+     
+             
+                var dbFilePath = FSHelpers.SaveMaterialText(uploadedfilename, file);
+            if(dbFilePath == "exists")
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok(links);
+            Material.TextMaterialName = uploadedfilename;
+            Material.URL= dbFilePath;
+            //Material.CourseId = 2;
+        
+            var result=db.AddMaterial(Material);
+                
+
+                return Ok(result);
             }
-        }
-        [HttpPost]
-        [Route("api/course/addtextmaterial")]
-        /////////////////////////may cause error 
-        public IActionResult AddMaterial(TextMaterial k)
+        [HttpGet]
+        [Route ("api/materialtext/{CourseId}")]
+        [Authorize]
+        [EnableCors]
+        public IActionResult MaterialTextByCourseId(int CourseId)
         {
-            if (!ModelState.IsValid)
+            if(CourseId==0)
             {
-                return BadRequest("enter the whole data please");
+                BadRequest(new { Message = "invalid course id" });
             }
-
-            return Ok(k);
-
-        }
-        [HttpPost]
-        [Route("api/course/edittextmaterial")]
-        ///////////////////////////////may cause error 
-        public IActionResult EditMaterial(TextMaterial k)
-        {
-            if (!ModelState.IsValid)
+            var material = db.MaterialTextByCourseId(CourseId);
+            if (material == null)
             {
-                return BadRequest("enter the whole data please");
+                return NotFound();
             }
-
-            return Ok(k);
-
+           
+            return Ok(material);
         }
+        [Authorize]
         [HttpGet]
         [Route("api/course/deletetextmaterial/{MId}")]
         public IActionResult DeleteMaterialByMaterialId(int MId)
@@ -65,5 +84,31 @@ namespace onlinelearningbackend.Controllers
             return Ok();
 
         }
-    }
-}
+        [HttpGet]
+        [Route("api/material/getfile/{url}")]
+        [Authorize]
+        public byte[] DownloadAsync(string url)
+        {
+            string filePath = Directory.GetCurrentDirectory()+"\\Resources\\MaterialText\\"+url;
+            string fileName = url;
+          
+             byte[] fileBytes = System.IO.File.ReadAllBytes(@"K:\iti 9 month program material\communication skills\Email Example.docx");
+           //var stream = new FileStream(filePath, FileMode.Open);
+            //return File(fileBytes, "application/force-download", fileName);
+            return fileBytes;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+    }}
