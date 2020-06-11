@@ -29,6 +29,7 @@ namespace onlinelearningbackend.Helpers
         }
         public static string SaveProfileImage(MyUserModel User,string uploadedfilename,IFormFile file)
         {
+          
             var folderName = Path.Combine("Resources", "ProfilePictures");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             var fileExtension = uploadedfilename.Substring(uploadedfilename.Length - 3).ToLower();
@@ -80,6 +81,28 @@ namespace onlinelearningbackend.Helpers
             var pathToDelete = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             var fullPath = Path.Combine(pathToDelete, filename);
             File.Delete(fullPath);
+
+        //material text file upload
+        public static string SaveMaterialText(string uploadedfilename, IFormFile file)
+        {
+            var folderName = Path.Combine("Resources", "MaterialText");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            var fileName = uploadedfilename;
+        var fullPath = Path.Combine(pathToSave, fileName);
+            if (!(System.IO.File.Exists(fullPath)))
+            {
+                var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+
+                return dbPath;
+            }
+            return "exists";
+
         }
     }
 }
