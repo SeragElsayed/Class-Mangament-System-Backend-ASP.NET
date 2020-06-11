@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlinelearningbackend.Data;
 
 namespace onlinelearningbackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200608224436_create-db")]
+    partial class createdb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -357,7 +359,7 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -366,11 +368,10 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<int>("IsActive")
+                        .HasColumnType("int");
 
                     b.Property<string>("TaskName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TaskId");
@@ -390,8 +391,8 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<int>("IsActive")
+                        .HasColumnType("int");
 
                     b.Property<string>("MyUserModelId")
                         .HasColumnType("nvarchar(450)");
@@ -461,8 +462,8 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<int>("IsActive")
+                        .HasColumnType("int");
 
                     b.Property<string>("TrackName")
                         .HasColumnType("nvarchar(max)");
@@ -590,11 +591,9 @@ namespace onlinelearningbackend.Data.Migrations
 
             modelBuilder.Entity("onlinelearningbackend.Models.TaskClass", b =>
                 {
-                    b.HasOne("onlinelearningbackend.Models.Course", "Course")
+                    b.HasOne("onlinelearningbackend.Models.Course", null)
                         .WithMany("Tasks")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.TaskSolution", b =>

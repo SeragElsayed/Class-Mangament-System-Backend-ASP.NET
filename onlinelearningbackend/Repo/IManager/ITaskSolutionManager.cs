@@ -8,7 +8,10 @@ namespace onlinelearningbackend.Manager
 {
    public interface ITaskSolutionManager
     {
-        List<TaskSolution> TaskByStudent(int StudentId,int TaskId);
+        TaskSolution GetTaskSolutionById(int TaskSolutionId);
+        IEnumerable<TaskSolution> AddTaskByStudent(string StudentId,int TaskId, int CourseId, TaskSolution newTaskSolution);
 
+        IEnumerable<TaskSolution> EditTaskSolution(string StudentId, TaskSolution newTaskSolution);
+        IEnumerable<TaskSolution> DeleteTaskSolutionByTaskId(int TaskSolutionId);
     }
 }

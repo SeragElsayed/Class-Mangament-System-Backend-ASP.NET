@@ -6,11 +6,11 @@ namespace onlinelearningbackend.Manager
 {
    public interface ITaskManager
     {
-        TaskClass TaskByTaskId(int TaskId);
-        IEnumerable<TaskClass> TaskByInstructorId(int InstructorId);
-        IEnumerable<TaskClass> TaskByCourseId(int CourseId);
+        TaskClass GetTaskByTaskId(int TaskId);
+        //IEnumerable<TaskClass> TaskByInstructorId(int InstructorId);//comment
+        IEnumerable<TaskClass> GetTaskByCourseId(int CourseId);
         /// taskclass
-        IEnumerable<TaskClass> AddTask(TaskClass NewTask);
+        IEnumerable<TaskClass> AddTask(int CourseId, TaskClass NewTask);
         IEnumerable<TaskClass> EditTask(TaskClass EditedTask);
         //void
         IEnumerable<TaskClass> DeleteTaskByTaskId(int TaskId);

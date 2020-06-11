@@ -7,13 +7,15 @@ namespace onlinelearningbackend.Models
 {
     public class TaskSolution
     {
+        
+
         public int TaskSolutionId { get; set; }
         public string TaskSolutionURL { get; set; }
         public virtual MyUserModel MyUserModel { get; set; }
         public virtual Course Course { get; set; }
         public virtual TaskClass Task { get; set; }
 
-        public int IsActive { get; set; } = 1;
-
+        public bool? IsActive { get; set; } = true;
+        public string FileName { get; internal set; }
     }
 }
