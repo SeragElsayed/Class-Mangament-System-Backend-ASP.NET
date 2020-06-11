@@ -17,11 +17,11 @@ namespace onlinelearningbackend.Manager
         }
         public IEnumerable<TextMaterial> AddMaterial(TextMaterial NewMaterial)
         {
-           var material=DB.TextMaterials.FromSqlRaw("EXEC dbo.usp_TextMaterials_Insert {0},{1}"
+           var material=DB.TextMaterials.FromSqlRaw("EXEC dbo.usp_TextMaterials_Insert {0},{1},{2}"
                                                 , NewMaterial.TextMaterialName
                                                 ,NewMaterial.URL
-                                                )
-                                            .ToList<TextMaterial>();
+                                                ,NewMaterial.CourseId
+                                                );
             return material;
 
 
@@ -29,24 +29,27 @@ namespace onlinelearningbackend.Manager
 
         public IEnumerable<TextMaterial> DeleteMaterialByMaterialId(int MaterialId)
         {
-            var material = DB.TextMaterials.FromSqlRaw("EXEC dbo.usp_MatrialText_Delete {0}", MaterialId).ToList<TextMaterial>();
+            var material = DB.TextMaterials.FromSqlRaw("EXEC dbo.usp_MatrialText_Delete {0}", MaterialId);
             return material;
         }
-
+        /// <summary>
+        /// --------------------------------------remain-----------------------------------------------
+        /// </summary>
+  
         public IEnumerable<TextMaterial> EditMaterial(TextMaterial EditMaterial)
         {
             var material = DB.TextMaterials.FromSqlRaw("EXEC dbo.usp_TextMaterials_Insert {0},{1},{2}"
                                                 , EditMaterial.TextMaterialId
                                                 , EditMaterial.TextMaterialName
                                                 , EditMaterial.URL
-                                                )
-                                            .ToList<TextMaterial>();
+                                                )  ;
             return material;
         }
 
         public IEnumerable<TextMaterial> MaterialTextByCourseId(int CourseId)
         {
             var material = DB.TextMaterials.FromSqlRaw("EXEC dbo.usp_MaterialText_Select_by_CourseId {0}", CourseId).ToList<TextMaterial>();
+            
             return material;
         }
     }
