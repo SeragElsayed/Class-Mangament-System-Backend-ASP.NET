@@ -14,70 +14,72 @@ namespace onlinelearningbackend.Controllers
     [ApiController]
     public class TaskController: ControllerBase
     {
-        ITaskManager db;
-        public TaskController(ITaskManager _db)
+        ITaskManager taskClass;
+        public TaskController(ITaskManager _taskClass)
         {
-            this.db = _db;     
+            this.taskClass = _taskClass;     
         }
         [HttpPost]
-        [Route("api/course/addmaterial")]
+        [Route("api/course/AddTask/{CourseId}")]
         //////////////////////may cause error 
-        public IActionResult AddMaterial(TaskClass k)
+        public IActionResult AddTaskByCourseId(int CourseId, TaskClass newTask)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("enter the whole data please");
             }
-
-            return Ok(k);
+            var addedtask = taskClass.AddTask( CourseId, newTask);
+            return Ok(addedtask);
 
         }
-        [HttpPost]
-        [Route("api/course/editmaterial")]
+        [HttpPut]
+        [Route("api/course/edittask/{taskId}")]
         //////////////////////may cause error 
-        public IActionResult EditMaterial(TaskClass k)
+        public IActionResult EditTask(TaskClass EditedTask)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("enter the whole data please");
             }
+            var editedTaskInDB = taskClass.EditTask(EditedTask);
 
-            return Ok(k);
+            return Ok(editedTaskInDB);
 
         }
-        [HttpGet]
-        [Route("api/course/deletematerial/{MId}")]
-        public IActionResult DeleteMaterialByMaterialId(int MId)
+        [HttpDelete]
+        [Route("api/course/deletetask/{taskId}")]
+        public IActionResult DeleteTaskByTaskId(int taskId)
         {
-            db.DeleteTaskByTaskId(MId);
+            taskClass.DeleteTaskByTaskId(taskId);
 
 
             return Ok();
 
         }
         [HttpGet]
-        [Route("api/course/tasksCrs/{id}")]
-        public IActionResult TaskByCourseId(int id)
+        [Route("api/course/tasks/{CourseId}")]
+        public IActionResult GetTaskByCourseId(int CourseId)
         {
-            var tasks = db.TaskByCourseId(id);
+            var tasks = taskClass.GetTaskByCourseId(CourseId);
             if (tasks == null)
                 return NotFound();
             return Ok(tasks);
         }
+        //[HttpGet]
+        //[Route("api/course/tasks/{InstructorId}")]
+        //public IActionResult TaskByInstructorId(int InstructorId)
+        //{
+        //    //var InstructorFromToken=User.Claims
+        //    var tasks = taskClass.TaskByCourseId(InstructorId);
+        //    if (tasks == null)
+        //        return NotFound();
+        //    return Ok(tasks);
+        //}
         [HttpGet]
-        [Route("api/course/tasksIns/{id}")]
-        public IActionResult TaskByInstructorId(int id)
+        [Route("api/course/tasks/{TaskId}")]
+        public IActionResult GetTaskByTaskId(int TaskId)
         {
-            var tasks = db.TaskByCourseId(id);
-            if (tasks == null)
-                return NotFound();
-            return Ok(tasks);
-        }
-        [HttpGet]
-        [Route("api/course/tasksTas/{id}")]
-        public IActionResult TaskByTaskId(int id)
-        {
-            var tasks = db.TaskByCourseId(id);
+            var tasks = taskClass.GetTaskByTaskId(TaskId);
             if (tasks == null)
                 return NotFound();
             return Ok(tasks);

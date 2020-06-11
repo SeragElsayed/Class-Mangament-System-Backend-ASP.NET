@@ -63,6 +63,7 @@ namespace onlinelearningbackend
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
             services.AddScoped<ICourseManager,CourseManager>();
+            services.AddScoped<ITaskSolutionManager, TaskSolutionManager>();
             services.AddScoped<IBranchManager, BranchManager>();
             services.AddScoped<ITrackManager, TrackManager>();
             services.AddScoped<ITaskManager, taskManager>();
