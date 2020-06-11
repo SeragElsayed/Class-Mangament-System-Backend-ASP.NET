@@ -11,6 +11,7 @@ namespace onlinelearningbackend.Helpers
     public static class FSHelpers
     {
         private static string AllowedExtensions = "jpgpng";
+        private static string AllowedExtensionsFiles = "ziprar";
         public static bool IsImageExtensionAllowed(string uploadedfilename)
         {
             var ReverseFileName =string.Concat( uploadedfilename.Reverse());
@@ -31,19 +32,11 @@ namespace onlinelearningbackend.Helpers
           
             var folderName = Path.Combine("Resources", "ProfilePictures");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-             //uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
             var fileExtension = uploadedfilename.Substring(uploadedfilename.Length - 3).ToLower();
-            //bool IsImgExtAllowed = IsImageExtensionAllowed(fileExtension);
-
-            //if (!IsImgExtAllowed)
-            //{
-            //    return "image extension must be jpg or png";
-            //}
 
                 var fileName = $"{User.UserName}.{fileExtension}";
                 var fullPath = Path.Combine(pathToSave, fileName);
                 var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
-               // User.PrifleImageUrl = dbPath;
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     file.CopyTo(stream);
@@ -52,6 +45,43 @@ namespace onlinelearningbackend.Helpers
             return dbPath;
            
         }
+        //uploadFile
+        public static bool IsFileAllowed(string uploadedfilename)
+        {
+            var ReverseFileName = string.Concat(uploadedfilename.Reverse());
+            var fileExtension = string.Concat(uploadedfilename.TakeWhile((c) => c == '.')).ToLower();
+            return AllowedExtensionsFiles.Contains(fileExtension);
+        }
+
+
+        public static string SaveTaskSolutionFile( string uploadedfilename, IFormFile file)
+        {
+            var folderName = Path.Combine("Resources", "TaskSolution");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var fileExtension = uploadedfilename.Substring(uploadedfilename.Length - 3).ToLower();
+
+            var fileName = $"{DateTime.Now}.{fileExtension}";
+            var fullPath = Path.Combine(pathToSave, fileName);
+            var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            return dbPath;
+
+        }
+
+
+        public static void DeleteOldTaskSolutionFile(string OldFilePath)
+        {
+            var ArrayOldFilePath = OldFilePath.Split('/');
+            var filename = ArrayOldFilePath[ArrayOldFilePath.Length - 1];
+            var folderName = Path.Combine("Resources", "TaskSolution");
+            var pathToDelete = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var fullPath = Path.Combine(pathToDelete, filename);
+            File.Delete(fullPath);
+
         //material text file upload
         public static string SaveMaterialText(string uploadedfilename, IFormFile file)
         {

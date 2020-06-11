@@ -16,9 +16,9 @@ namespace onlinelearningbackend.Repo.Manager
         {
             this.db = _db;
         }
-        public List<Track> GetAllTracksByBId(int id)
+        public List<Track> GetAllTracksByBranchId(int branchId)
         {
-            var tracks = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_BrId {id}").ToList<Track>();
+            var tracks = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_BrId {branchId}").ToList<Track>();
             return tracks;
         }
     }
