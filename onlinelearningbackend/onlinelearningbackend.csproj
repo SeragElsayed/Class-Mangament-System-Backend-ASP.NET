@@ -23,7 +23,7 @@
 
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <Folder Include="Resources\MaterialText\" />
     <Folder Include="Resources\ProfilePictures\" />
   </ItemGroup>
 

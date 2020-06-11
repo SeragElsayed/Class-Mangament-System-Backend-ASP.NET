@@ -38,8 +38,28 @@ namespace onlinelearningbackend
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+
+        string x = "hi";
         public void ConfigureServices(IServiceCollection services)
         {
+            
+             services.AddCors(options =>
+            {
+                options.AddPolicy(x,
+                builder =>
+                {
+                    // builder.WithOrigins("","")
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                });
+            });
+
+
+
+
+
+
             services.AddControllers().AddNewtonsoftJson();
             services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
             services.AddScoped<ICourseManager,CourseManager>();
@@ -72,7 +92,7 @@ namespace onlinelearningbackend
                // .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
-            services.AddCors();
+            //services.AddCors();
 
            // services.AddControllersWithViews();
             //services.AddRazorPages();
@@ -132,7 +152,8 @@ namespace onlinelearningbackend
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseCors(x);
+            //app.UseCors(options => options.AllowAnyOrigin());
             app.UseEndpoints(endpoints =>
             {
                 
