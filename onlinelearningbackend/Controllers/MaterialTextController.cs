@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
@@ -23,11 +25,11 @@ namespace onlinelearningbackend.Controllers
 
         [HttpPost]
         [Route("api/course/addtextmaterial")]
-       
-        public IActionResult AddMaterial([FromForm] TextMaterial Material,IFormFile materialFile)
+        [Authorize]
+        public IActionResult AddMaterial([FromForm] TextMaterial Material )
         {
           
-                var file = materialFile;
+                var file = Request.Form.Files[0];
                 bool IsInfoValid = ModelState.IsValid;
                 bool IsImageUploaded = file.Length > 0;
 
@@ -55,6 +57,8 @@ namespace onlinelearningbackend.Controllers
             }
         [HttpGet]
         [Route ("api/materialtext/{CourseId}")]
+        [Authorize]
+        [EnableCors]
         public IActionResult MaterialTextByCourseId(int CourseId)
         {
             if(CourseId==0)
@@ -69,7 +73,7 @@ namespace onlinelearningbackend.Controllers
            
             return Ok(material);
         }
-
+        [Authorize]
         [HttpGet]
         [Route("api/course/deletetextmaterial/{MId}")]
         public IActionResult DeleteMaterialByMaterialId(int MId)
@@ -80,5 +84,31 @@ namespace onlinelearningbackend.Controllers
             return Ok();
 
         }
-    }
-}
+        [HttpGet]
+        [Route("api/material/getfile/{url}")]
+        [Authorize]
+        public byte[] DownloadAsync(string url)
+        {
+            string filePath = Directory.GetCurrentDirectory()+"\\Resources\\MaterialText\\"+url;
+            string fileName = url;
+          
+             byte[] fileBytes = System.IO.File.ReadAllBytes(@"K:\iti 9 month program material\communication skills\Email Example.docx");
+           //var stream = new FileStream(filePath, FileMode.Open);
+            //return File(fileBytes, "application/force-download", fileName);
+            return fileBytes;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+    }}
