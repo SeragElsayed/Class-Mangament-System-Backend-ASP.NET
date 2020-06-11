@@ -23,5 +23,7 @@ namespace onlinelearningbackend.Data
         public virtual DbSet<TextMaterial> TextMaterials { get; set; }
         public virtual DbSet<VideoMaterial> VideoMaterials { get; set; }
         public virtual DbSet<LinkMaterial> LinkMaterials { get; set; }
+        public virtual DbSet<CourseMaterialModel> CourseMaterialModels { get; set; }
+
     }
 }

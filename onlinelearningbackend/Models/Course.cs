@@ -32,5 +32,8 @@ namespace onlinelearningbackend.Models
         public virtual ICollection<TextMaterial> TextMaterials { get; set; } = new HashSet<TextMaterial>();
         public virtual ICollection<VideoMaterial> VideoMaterials { get; set; } = new HashSet<VideoMaterial>();
         public virtual ICollection<LinkMaterial> LinkMaterials { get; set; } = new HashSet<LinkMaterial>();
+        public virtual ICollection<CourseMaterialModel> CourseMaterialModels { get; set; } = new HashSet<CourseMaterialModel>();
+
+
     }
 }
