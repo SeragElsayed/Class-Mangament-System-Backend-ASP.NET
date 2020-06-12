@@ -122,7 +122,7 @@ namespace onlinelearningbackend.Helpers
         //    var fullPath = Path.Combine(pathToDelete, filename);
         //    File.Delete(fullPath);
         //}
-        //material text file upload
+        ////material text file upload
         // public static string SaveMaterialText(string uploadedfilename, IFormFile file)
         //{
         //    var folderName = Path.Combine("Resources", "MaterialText");
