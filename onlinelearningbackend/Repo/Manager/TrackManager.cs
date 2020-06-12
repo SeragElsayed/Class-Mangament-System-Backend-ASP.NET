@@ -40,5 +40,11 @@ namespace onlinelearningbackend.Repo.Manager
         {
             db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Delete {TrackId}");
         }
+
+        public Track GetAllTracksByTrackId(int TrackId)
+        {
+            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Track_Id {TrackId}").ToList<Track>().FirstOrDefault();
+            return track;
+        }
     }
 }

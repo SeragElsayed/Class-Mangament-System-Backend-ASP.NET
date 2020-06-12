@@ -36,9 +36,26 @@ namespace onlinelearningbackend.Controllers
             }
 
         }
+
+        [HttpGet]
+        [Route("api/Track/track/{TrackId}")]
+        public IActionResult GetTrackByTrackId(int TrackId)
+        {
+            if (TrackId < 1)
+                return BadRequest();
+
+            var Trackes = TrackManager.GetAllTracksByTrackId(TrackId);
+
+            if (Trackes == null)
+                return NotFound();
+
+            return Ok(Trackes);
+
+        }
+
         [HttpGet]
         [Route("api/Track/{BranchId}")]
-        public IActionResult GetTrackById(int BranchId)
+        public IActionResult GetTrackByBranchId(int BranchId)
         {
             if (BranchId < 1)
                 return BadRequest();
