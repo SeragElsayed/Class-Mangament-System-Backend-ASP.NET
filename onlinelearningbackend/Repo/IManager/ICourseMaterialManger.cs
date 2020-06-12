@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace onlinelearningbackend.Repo.IManager
 {
-   public interface ICourseMaterialManger
+    public interface ICourseMaterialManger
     {
         IEnumerable<CourseMaterialModel> AddMaterial(int courseId, string PathOnServer);
         IEnumerable<CourseMaterialModel> DeleteMaterialByMaterialId(int MaterialId);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +13,7 @@ namespace onlinelearningbackend.Models
         public int ProjectMaterialModelId { get; set; }
         [Required]
         public string PathOnServer { get; set; }
+
         [ForeignKey("Project")]
         public int ProjectId { get; set; }
         [Required]
