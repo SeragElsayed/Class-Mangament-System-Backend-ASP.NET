@@ -8,9 +8,9 @@ namespace onlinelearningbackend.Repo.IManager
 {
    public interface IProjectManager
     {
-        IEnumerable<ProjectModel> GetProjectById(int ProjectId);
+        ProjectModel GetProjectById(int ProjectId);
         IEnumerable<ProjectModel> GetProjectByTrackId(int TrackId);
-        IEnumerable<ProjectModel> GetProjectByStudentId(int StudentId);
+        IEnumerable<ProjectModel> GetProjectByStudentId(string StudentId);
         ProjectModel AddProjectByTrackId(ProjectModel NewProject,int TrackId, string StudentId);
         ProjectModel EditProject(ProjectModel EDitedProject);
         void DeleteProject(int ProjectId);

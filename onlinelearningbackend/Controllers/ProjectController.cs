@@ -62,10 +62,10 @@ namespace onlinelearningbackend.Controllers
 
         //IEnumerable<ProjectModel> GetProjectByStudentId(int StudentId);
         [HttpGet]
-        [Route("api/Project/Student/{StudentId}")]
-        public IActionResult GetProjectByStudentId(int StudentId)
+        [Route("api/Project/Student")]
+        public IActionResult GetProjectByStudentId()
         {
-
+            string StudentId = User.Claims.First(c => c.Type == "UserId").Value;
             var Projects = ProjectManager.GetProjectByStudentId(StudentId);
 
             if (Projects == null)
