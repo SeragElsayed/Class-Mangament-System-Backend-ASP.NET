@@ -27,6 +27,5 @@ namespace onlinelearningbackend.Models
         public virtual Branch Branch { get; set; }
         public virtual Track Track { get; set; }
 
-        public int IsActive { get; set; } = 1;
     }
 }

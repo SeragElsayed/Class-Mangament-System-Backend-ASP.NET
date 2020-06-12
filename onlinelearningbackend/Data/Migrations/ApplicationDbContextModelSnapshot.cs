@@ -140,7 +140,7 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IsActive")
-                        .HasColumnType("int");
+                        .HasColumnType("bit");
 
                     b.HasKey("BranchId");
 
@@ -312,8 +312,6 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("IsActive")
-                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -378,7 +376,7 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -387,13 +385,10 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-
-                    b.Property<bool?>("IsActive")
+                    b.Property<int>("IsActive")
                         .HasColumnType("bit");
 
-
                     b.Property<string>("TaskName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TaskId");
@@ -413,9 +408,8 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<int>("IsActive")
                         .HasColumnType("bit");
-
 
                     b.Property<string>("MyUserModelId")
                         .HasColumnType("nvarchar(450)");
@@ -488,8 +482,7 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
-
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("TrackName")
@@ -627,11 +620,9 @@ namespace onlinelearningbackend.Data.Migrations
 
             modelBuilder.Entity("onlinelearningbackend.Models.TaskClass", b =>
                 {
-                    b.HasOne("onlinelearningbackend.Models.Course", "Course")
+                    b.HasOne("onlinelearningbackend.Models.Course", null)
                         .WithMany("Tasks")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.TaskSolution", b =>
