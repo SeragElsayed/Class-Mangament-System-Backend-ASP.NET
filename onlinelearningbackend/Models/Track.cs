@@ -13,6 +13,7 @@ namespace onlinelearningbackend.Models
         public bool? IsActive { get; set; } = true;
         public virtual ICollection<MyUserModel> MyUserModels { get; set; } = new HashSet<MyUserModel>();
         public virtual ICollection<Course> Courses { get; set; } = new HashSet<Course>();
+        public virtual ICollection<ProjectModel> ProjectModels { get; set; } = new HashSet<ProjectModel>();
 
     }
 }
