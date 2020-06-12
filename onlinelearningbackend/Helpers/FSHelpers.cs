@@ -83,9 +83,9 @@ namespace onlinelearningbackend.Helpers
             var pathToDelete = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             var fullPath = Path.Combine(pathToDelete, filename);
             File.Delete(fullPath);
-
+        }
         //material text file upload
-        public static string SaveMaterialText(string uploadedfilename, IFormFile file)
+        public static bool SaveMaterialText(string uploadedfilename, IFormFile file)
 
         {
             var ReverseFileName = string.Concat(uploadedfilename.Reverse());
@@ -94,56 +94,56 @@ namespace onlinelearningbackend.Helpers
         }
 
 
-        public static string SaveTaskSolutionFile( string uploadedfilename, IFormFile file)
-        {
-            var folderName = Path.Combine("Resources", "TaskSolution");
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            var fileExtension = uploadedfilename.Substring(uploadedfilename.Length - 3).ToLower();
+        //public static string SaveTaskSolutionFile( string uploadedfilename, IFormFile file)
+        //{
+        //    var folderName = Path.Combine("Resources", "TaskSolution");
+        //    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        //    var fileExtension = uploadedfilename.Substring(uploadedfilename.Length - 3).ToLower();
 
-            var fileName = $"{DateTime.Now}.{fileExtension}";
-            var fullPath = Path.Combine(pathToSave, fileName);
-            var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
-            using (var stream = new FileStream(fullPath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
+        //    var fileName = $"{DateTime.Now}.{fileExtension}";
+        //    var fullPath = Path.Combine(pathToSave, fileName);
+        //    var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
+        //    using (var stream = new FileStream(fullPath, FileMode.Create))
+        //    {
+        //        file.CopyTo(stream);
+        //    }
 
-            return dbPath;
+        //    return dbPath;
            
-        }
+        //}
 
 
-        public static void DeleteOldTaskSolutionFile(string OldFilePath)
-        {
-            var ArrayOldFilePath = OldFilePath.Split('/');
-            var filename = ArrayOldFilePath[ArrayOldFilePath.Length - 1];
-            var folderName = Path.Combine("Resources", "TaskSolution");
-            var pathToDelete = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            var fullPath = Path.Combine(pathToDelete, filename);
-            File.Delete(fullPath);
-        }
-        //material text file upload
-         public static string SaveMaterialText(string uploadedfilename, IFormFile file)
-        {
-            var folderName = Path.Combine("Resources", "MaterialText");
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        //public static void DeleteOldTaskSolutionFile(string OldFilePath)
+        //{
+        //    var ArrayOldFilePath = OldFilePath.Split('/');
+        //    var filename = ArrayOldFilePath[ArrayOldFilePath.Length - 1];
+        //    var folderName = Path.Combine("Resources", "TaskSolution");
+        //    var pathToDelete = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        //    var fullPath = Path.Combine(pathToDelete, filename);
+        //    File.Delete(fullPath);
+        //}
+        ////material text file upload
+        // public static string SaveMaterialText(string uploadedfilename, IFormFile file)
+        //{
+        //    var folderName = Path.Combine("Resources", "MaterialText");
+        //    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-                var fileName = uploadedfilename;
-                var fullPath = Path.Combine(pathToSave, fileName);
-                if (!(System.IO.File.Exists(fullPath)))
-                {
-                    var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
+        //        var fileName = uploadedfilename;
+        //        var fullPath = Path.Combine(pathToSave, fileName);
+        //        if (!(System.IO.File.Exists(fullPath)))
+        //        {
+        //            var dbPath = $"{folderName.Replace('\\', '/')}/{fileName}";
 
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
+        //            using (var stream = new FileStream(fullPath, FileMode.Create))
+        //            {
+        //                file.CopyTo(stream);
+        //            }
 
-                    return dbPath;
-                }
-                return "exists";
+        //            return dbPath;
+        //        }
+        //        return "exists";
 
-            }
+        //    }
         }
     } 
 
