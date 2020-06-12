@@ -8,6 +8,10 @@ namespace onlinelearningbackend.Repo.IManager
 {
     public interface IBranchManager
     {
-        List<Branch> GetAllBranchs();
+        List<Branch> GetAllBranches();
+        Branch GetBranchById(int BranchId);
+        Branch AddBranch(Branch NewBranch);
+        Branch EditBranchById(Branch EditedBranch);
+        void DeleteBranchById(int BranchId);
     }
 }

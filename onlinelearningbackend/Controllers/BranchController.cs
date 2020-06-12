@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using onlinelearningbackend.Repo.IManager;
-
+using onlinelearningbackend.Models;
 
 namespace onlinelearningbackend.Controllers
 {
@@ -15,19 +15,19 @@ namespace onlinelearningbackend.Controllers
     public class BranchController : Controller
     {
 
-        IBranchManager db;
+        IBranchManager BranchManager;
         public BranchController(IBranchManager _db)
         {
-            this.db = _db;
+            this.BranchManager = _db;
         }
 
 
 
         [HttpGet]
-        [Route("api/explore/branches")]
-        public async Task<IActionResult> GetAllBranchs()
+        [Route("api/branch")]
+        public  IActionResult GetAllBranchs()
         {
-            var branches = db.GetAllBranchs();
+            var branches = BranchManager.GetAllBranches();
 
             if (branches == null)
             {
@@ -37,6 +37,47 @@ namespace onlinelearningbackend.Controllers
             {
                 return Ok(branches);
             }
+
+        }
+        [HttpGet]
+        [Route("api/branch/{BranchId}")]
+        public IActionResult GetBranchById(int BranchId)
+        {
+            if (BranchId < 1)
+                return BadRequest();
+
+            var branches = BranchManager.GetBranchById(BranchId);
+
+            if (branches == null)
+                return NotFound();
+           
+            return Ok(branches);
+
+        }
+        [HttpPost]
+        [Route("api/branch/Add")]
+        public IActionResult PostNewBranch([FromBody] Branch NewBranch )
+        {
+            var BranchInDb = BranchManager.AddBranch(NewBranch);
+            return Ok(BranchInDb);
+
+        }
+        [HttpPut]
+        [Route("api/branch/Edit/{BranchId}")]
+        public IActionResult PutBranch([FromBody] Branch EditedBranch)
+        {
+            var BranchInDb = BranchManager.EditBranchById(EditedBranch);
+
+            return Ok(BranchInDb);
+
+        }
+        [HttpDelete]
+        [Route("api/branch/Delete/{BranchId}")]
+        public IActionResult DeleteBranch(int BranchId)
+        {
+            BranchManager.DeleteBranchById(BranchId);
+
+            return Ok();
 
         }
     }

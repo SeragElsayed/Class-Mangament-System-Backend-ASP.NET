@@ -16,10 +16,29 @@ namespace onlinelearningbackend.Repo.Manager
         {
             this.db = _db;
         }
+        public List<Track> GetAllTracks()
+        {
+            var tracks = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Select ").ToList<Track>();
+            return tracks;
+        }
         public List<Track> GetAllTracksByBranchId(int branchId)
         {
             var tracks = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_BrId {branchId}").ToList<Track>();
             return tracks;
+        }
+        public Track EditTrack(Track EditedTrack)
+        {
+            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Update '{EditedTrack.TrackName}'").FirstOrDefault();
+            return track;
+        }
+        public Track AddTrack(Track NewTrack)
+        {
+            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Insert '{NewTrack.TrackName}'").FirstOrDefault();
+            return track;
+        }
+        public void DeleteTrackById(int TrackId)
+        {
+            db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Delete {TrackId}");
         }
     }
 }

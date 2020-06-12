@@ -16,10 +16,41 @@ namespace onlinelearningbackend.Repo.Manager
         {
             this.db = _db;
         }
-        public List<Branch> GetAllBranchs()
+        public List<Branch> GetAllBranches()
         {
-            var branches = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches").ToList<Branch>();
+            var branches = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Select").ToList<Branch>();
             return branches;
         }
+        public Branch GetBranchById(int BranchId)
+        {
+            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Select_By_Id {0}", BranchId).FirstOrDefault();
+            return branch;
+        }
+        public Branch EditBranchById(Branch EditedBranch)
+        {
+            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Update {0},{1},{2},{3}",
+                                                        EditedBranch.BranchId,
+                                                        EditedBranch.BranchName,
+                                                        EditedBranch.BranchEmail,
+                                                        EditedBranch.BranchTelephone)
+                                                        .FirstOrDefault();
+            return branch;
+        }
+        public Branch AddBranch(Branch NewBranch)
+        {
+            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Insert {0},{1},{2},{3}",
+                                                           NewBranch.BranchName,
+                                                           NewBranch.BranchEmail,
+                                                           NewBranch.BranchTelephone,
+                                                           NewBranch.IsActive).FirstOrDefault();
+            return branch;
+        }
+        public void DeleteBranchById(int BranchId)
+        {
+            db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Delete {0}", BranchId);
+           
+        }
+
+       
     }
 }
