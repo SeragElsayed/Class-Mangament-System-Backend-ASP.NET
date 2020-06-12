@@ -37,7 +37,8 @@ namespace onlinelearningbackend.Repo.Manager
             var project = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Insert {0},{1},{2}", 
                                                         NewProject.ProjectName,
                                                         NewProject.ProjectDescription,
-                                                        TrackId).ToList<ProjectModel>().FirstOrDefault();
+                                                        TrackId,
+                                                        StudentId).ToList<ProjectModel>().FirstOrDefault();
             return project;
         }
         public ProjectModel EditProject(ProjectModel EditedProject)
