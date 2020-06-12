@@ -24,6 +24,7 @@ namespace onlinelearningbackend.Models
         public DateTime DateOfBirth { get; set; }
         public virtual ICollection<TaskSolution> TaskSolutions { get; set; } = new HashSet<TaskSolution>();
         public virtual ICollection<CourseMyUserModel> CourseMyUserModels { get; set; } = new HashSet<CourseMyUserModel>();
+        public virtual ICollection<UserProjectModel> UserProjectModels { get; set; } = new HashSet<UserProjectModel>();
         public virtual Branch Branch { get; set; }
         public virtual Track Track { get; set; }
 
