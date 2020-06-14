@@ -7,25 +7,28 @@ using System.Threading.Tasks;
 
 namespace onlinelearningbackend.Models
 {
-    public class MyUserModel:IdentityUser
+    public class MyUserModel : IdentityUser
     {
-        public MyUserModel():base()
+        public MyUserModel() : base()
         {
         }
-        public MyUserModel(string UserName):base(UserName)
+        public MyUserModel(string UserName) : base(UserName)
         {
 
         }
-        
+
         public string PrifleImageUrl { get; set; }
-        [Required]
+
         public string City { get; set; }
-        [Required]
+        public bool IsActive { get; set; } = true;
+
         public DateTime DateOfBirth { get; set; }
         public virtual ICollection<TaskSolution> TaskSolutions { get; set; } = new HashSet<TaskSolution>();
         public virtual ICollection<CourseMyUserModel> CourseMyUserModels { get; set; } = new HashSet<CourseMyUserModel>();
         public virtual ICollection<UserProjectModel> UserProjectModels { get; set; } = new HashSet<UserProjectModel>();
+        public int? BranchId { get; set; }
         public virtual Branch Branch { get; set; }
+        public int? TrackId { get; set; }
         public virtual Track Track { get; set; }
 
     }

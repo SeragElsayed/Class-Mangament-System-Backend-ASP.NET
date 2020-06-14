@@ -15,8 +15,8 @@ namespace onlinelearningbackend.Models
         public string Description { get; set; }
         [Required]
         public DateTime DueDate { get; set; }
-        public bool? IsActive { get; set; } = true;//c# bool => bit data type in mssql(1 true ,,,,, 0 false)
-        public int CourseId { get; set; }
+        public bool IsActive { get; set; } = true;//c# bool => bit data type in mssql(1 true ,,,,, 0 false)
+        public int? CourseId { get; set; }
         public virtual ICollection<TaskSolution> TaskSolutions { get; set; } = new HashSet<TaskSolution>();
         //public virtual ICollection<Course> Courses { get; set; } = new HashSet<Course>();
 

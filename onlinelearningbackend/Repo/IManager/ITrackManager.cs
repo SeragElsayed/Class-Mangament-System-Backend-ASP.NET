@@ -8,12 +8,6 @@ namespace onlinelearningbackend.Repo.IManager
 {
     public interface ITrackManager
     {
-        Track GetAllTracksByTrackId(int TrackId);
-        List<Track> GetAllTracks();
-        List<Track> GetAllTracksByBranchId(int BranchId);
-        Track AddTrack(Track NewTrack);
-        Track EditTrack(Track EditedTrack);
-        void DeleteTrackById(int TrackId);
-
+        List<Track> GetAllTracksByBranchId(int branchId);
     }
 }

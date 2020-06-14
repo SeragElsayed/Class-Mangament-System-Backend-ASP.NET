@@ -12,6 +12,6 @@ namespace onlinelearningbackend.Repo.IManager
         Branch GetBranchById(int BranchId);
         Branch AddBranch(Branch NewBranch);
         Branch EditBranchById(Branch EditedBranch);
-        void DeleteBranchById(int BranchId);
+        Branch DeleteBranchById(int BranchId);
     }
 }

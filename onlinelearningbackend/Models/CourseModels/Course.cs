@@ -20,12 +20,14 @@ namespace onlinelearningbackend.Models
 
         public int IntervalInDays { get; set; }
         public DateTime StartingDate { get; set; }
-        [Required]
 
+        [Required]
         public string EnrollmentKey { get; set; }
 
-        public virtual Topic Topic { get; set; }
+        public int? TrackId { get; set; }
         public virtual Track Track { get; set; }
+        public virtual Topic Topic { get; set; }
+
         public virtual ICollection<CourseMyUserModel> CourseMyUserModels { get; set; } = new HashSet<CourseMyUserModel>();
         public virtual ICollection<TaskClass> Tasks { get; set; } = new HashSet<TaskClass>();
         public virtual ICollection<TaskSolution> TaskSolutions { get; set; } = new HashSet<TaskSolution>();

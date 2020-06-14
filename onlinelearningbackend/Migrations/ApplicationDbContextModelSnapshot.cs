@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlinelearningbackend.Data;
 
-namespace onlinelearningbackend.Data.Migrations
+namespace onlinelearningbackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200612051033_addedProjectTables")]
-    partial class addedProjectTables
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,7 +194,8 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("PathOnServer")
@@ -297,7 +296,6 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -312,6 +310,9 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -381,14 +382,15 @@ namespace onlinelearningbackend.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("ProjectMaterialModelId");
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectMaterialModel");
+                    b.ToTable("ProjectMaterialModels");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.ProjectModel", b =>
@@ -405,9 +407,14 @@ namespace onlinelearningbackend.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TrackId")
+                        .HasColumnType("int");
+
                     b.HasKey("ProjectModelId");
 
-                    b.ToTable("ProjectModel");
+                    b.HasIndex("TrackId");
+
+                    b.ToTable("ProjectModels");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.TaskClass", b =>
@@ -417,7 +424,7 @@ namespace onlinelearningbackend.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -426,7 +433,7 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("TaskName")
@@ -453,7 +460,7 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("MyUserModelId")
@@ -524,7 +531,7 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("TrackName")
@@ -547,19 +554,19 @@ namespace onlinelearningbackend.Data.Migrations
                     b.Property<bool>("IsOwner")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ProjectModelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("myUserModelId")
+                    b.Property<string>("MyUserModelId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("projectModelId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserProjectModelId");
 
-                    b.HasIndex("ProjectModelId");
+                    b.HasIndex("MyUserModelId");
 
-                    b.HasIndex("myUserModelId");
+                    b.HasIndex("projectModelId");
 
-                    b.ToTable("UserProjectModel");
+                    b.ToTable("UserProjectModels");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.VideoMaterial", b =>
@@ -694,13 +701,18 @@ namespace onlinelearningbackend.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("onlinelearningbackend.Models.ProjectModel", b =>
+                {
+                    b.HasOne("onlinelearningbackend.Models.Track", "Track")
+                        .WithMany("ProjectModels")
+                        .HasForeignKey("TrackId");
+                });
+
             modelBuilder.Entity("onlinelearningbackend.Models.TaskClass", b =>
                 {
                     b.HasOne("onlinelearningbackend.Models.Course", "Course")
                         .WithMany("Tasks")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.TaskSolution", b =>
@@ -736,13 +748,13 @@ namespace onlinelearningbackend.Data.Migrations
 
             modelBuilder.Entity("onlinelearningbackend.Models.UserProjectModel", b =>
                 {
-                    b.HasOne("onlinelearningbackend.Models.ProjectModel", "projectModel")
-                        .WithMany("UserProjectModels")
-                        .HasForeignKey("ProjectModelId");
-
                     b.HasOne("onlinelearningbackend.Models.MyUserModel", "myUserModel")
                         .WithMany("UserProjectModels")
-                        .HasForeignKey("myUserModelId");
+                        .HasForeignKey("MyUserModelId");
+
+                    b.HasOne("onlinelearningbackend.Models.ProjectModel", "projectModel")
+                        .WithMany("UserProjectModels")
+                        .HasForeignKey("projectModelId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.VideoMaterial", b =>

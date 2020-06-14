@@ -18,7 +18,6 @@ namespace onlinelearningbackend.Data
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<TaskClass> Tasks { get; set; }
         public virtual DbSet<TaskSolution> TaskSolutions { get; set; }
-        public virtual DbSet<Topic> Topics { get; set; }
         public virtual DbSet<Track> Tracks { get; set; }
         public virtual DbSet<ProjectModel> ProjectModels { get; set; }
         public virtual DbSet<TextMaterial> TextMaterials { get; set; }
@@ -27,6 +26,8 @@ namespace onlinelearningbackend.Data
         public virtual DbSet<CourseMaterialModel> CourseMaterialModels { get; set; }
         public virtual DbSet<ProjectMaterialModel> ProjectMaterialModels { get; set; }
         public virtual DbSet<UserProjectModel> UserProjectModels { get; set; }
+        public virtual DbSet<Topic> Topics { get; set; }
+
 
     }
 }

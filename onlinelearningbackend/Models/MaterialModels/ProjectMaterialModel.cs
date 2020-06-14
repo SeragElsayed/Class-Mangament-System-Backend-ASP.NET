@@ -15,7 +15,7 @@ namespace onlinelearningbackend.Models
         public string PathOnServer { get; set; }
 
         [ForeignKey("Project")]
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
         [Required]
         public ProjectModel Project { get; set; }
     }

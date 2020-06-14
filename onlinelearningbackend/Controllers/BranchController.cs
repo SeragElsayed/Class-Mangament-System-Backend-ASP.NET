@@ -25,7 +25,7 @@ namespace onlinelearningbackend.Controllers
 
         [HttpGet]
         [Route("api/branch")]
-        public  IActionResult GetAllBranchs()
+        public IActionResult GetAllBranchs()
         {
             var branches = BranchManager.GetAllBranches();
 
@@ -50,21 +50,23 @@ namespace onlinelearningbackend.Controllers
 
             if (branches == null)
                 return NotFound();
-           
+
             return Ok(branches);
 
         }
         [HttpPost]
         [Route("api/branch/Add")]
-        public IActionResult PostNewBranch([FromBody] Branch NewBranch )
+        public IActionResult PostNewBranch([FromForm] Branch NewBranch)
         {
             var BranchInDb = BranchManager.AddBranch(NewBranch);
+
+
             return Ok(BranchInDb);
 
         }
         [HttpPut]
         [Route("api/branch/Edit/{BranchId}")]
-        public IActionResult PutBranch([FromBody] Branch EditedBranch)
+        public IActionResult PutBranch([FromForm] Branch EditedBranch)
         {
             var BranchInDb = BranchManager.EditBranchById(EditedBranch);
 

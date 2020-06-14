@@ -10,8 +10,13 @@ namespace onlinelearningbackend.Models
     {
         public int UserProjectModelId { get; set; }
         public bool IsOwner { get; set; }
-        
+
+        [ForeignKey("AspNetUsers")]
+        public string MyUserModelId { get; set; }
+
         public MyUserModel myUserModel { get; set; }
+
+        public int? projectModelId { get; set; }
         public ProjectModel projectModel { get; set; }
     }
 }

@@ -13,9 +13,8 @@ namespace onlinelearningbackend.Models
         public int Id { get; set; }
         [Required]
         public string PathOnServer { get; set; }
-
         [ForeignKey("Course")]
-        public int CourseId { get; set; }
+        public int? CourseId { get; set; }
         [Required]
         public Course Course { get; set; }
     }

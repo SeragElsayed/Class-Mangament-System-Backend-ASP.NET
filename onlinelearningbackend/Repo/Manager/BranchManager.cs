@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using onlinelearningbackend.Data;
 using onlinelearningbackend.Models;
 using onlinelearningbackend.Repo.IManager;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace onlinelearningbackend.Repo.Manager
 {
-    public class BranchManager:IBranchManager
+    public class BranchManager : IBranchManager
     {
         ApplicationDbContext db;
         public BranchManager(ApplicationDbContext _db)
@@ -38,19 +39,20 @@ namespace onlinelearningbackend.Repo.Manager
         }
         public Branch AddBranch(Branch NewBranch)
         {
-            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Insert {0},{1},{2},{3}",
+            var branch = db.Branches.FromSqlRaw<Branch>("EXEC  dbo.usp_Branches_Insert {0},{1},{2},{3}",
                                                            NewBranch.BranchName,
                                                            NewBranch.BranchEmail,
                                                            NewBranch.BranchTelephone,
-                                                           NewBranch.IsActive).FirstOrDefault();
+                                                           NewBranch.IsActive).ToList().FirstOrDefault();
+
             return branch;
         }
-        public void DeleteBranchById(int BranchId)
+        public Branch DeleteBranchById(int BranchId)
         {
-            db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Delete {0}", BranchId);
-           
+            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Delete {0}", BranchId).ToList().FirstOrDefault();
+            return branch;
         }
 
-       
+
     }
 }

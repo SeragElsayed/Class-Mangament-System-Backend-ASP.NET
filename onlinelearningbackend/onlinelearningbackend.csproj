@@ -6,6 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200614232330_Model1.0.0.0.cs" />
+    <Compile Remove="Migrations\20200614232330_Model1.0.0.0.Designer.cs" />
+    <Compile Remove="Migrations\20200614233007_Model1.0.0.0.cs" />
+    <Compile Remove="Migrations\20200614233007_Model1.0.0.0.Designer.cs" />
+    <Compile Remove="Migrations\20200614233728_Model1.0.0.0.cs" />
+    <Compile Remove="Migrations\20200614233728_Model1.0.0.0.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\uploads\1.jpg" />
   </ItemGroup>
 
@@ -34,11 +43,7 @@
     <Folder Include="Resources\TaskSolution\" />
     <Folder Include="Resources\MaterialText\" />
     <Folder Include="Resources\ProfilePictures\" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <None Include="wwwroot\uploads\1.jpg" />
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,7 @@ namespace onlinelearningbackend.Models
         [Required]
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
+        public int? TrackId { get; set; }
         public Track Track { get; set; }
 
         public virtual ICollection<UserProjectModel> UserProjectModels { get; set; } = new HashSet<UserProjectModel>();

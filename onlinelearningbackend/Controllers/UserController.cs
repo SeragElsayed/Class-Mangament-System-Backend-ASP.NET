@@ -24,7 +24,7 @@ namespace onlinelearningbackend.Controllers
     public class UserController : ControllerBase
     {
         private readonly SignInManager<MyUserModel> _signInManager;
-       
+
         private readonly UserManager<MyUserModel> _userManager;
         private readonly RoleManager<MyRoleModel> _roleManager;
         //IStudentManager db;
@@ -69,14 +69,14 @@ namespace onlinelearningbackend.Controllers
             {
                 return BadRequest(new { message = "invalid registration info" });
             }
-            if (  IsImageUploaded==  false)
-                {
-                    var user = await _userManager.CreateAsync(NewUser, NewUser.Password);
+            if (IsImageUploaded == false)
+            {
+                var user = await _userManager.CreateAsync(NewUser, NewUser.Password);
                 // to assign role to user 
                 var userdata = await _userManager.FindByNameAsync(NewUser.UserName);
                 await _userManager.AddToRoleAsync(userdata, "Student");
-                    return Ok(user);
-                }
+                return Ok(user);
+            }
 
             var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
             var IsImgExtAllowed = FSHelpers.IsImageExtensionAllowed(uploadedfilename);
@@ -86,7 +86,7 @@ namespace onlinelearningbackend.Controllers
 
             }
             var dbImagePath = FSHelpers.SaveProfileImage(NewUser, uploadedfilename, file);
-            
+
             NewUser.PrifleImageUrl = dbImagePath;
 
             var result = await _userManager.CreateAsync(NewUser, NewUser.Password);
@@ -94,7 +94,22 @@ namespace onlinelearningbackend.Controllers
             var u = await _userManager.FindByNameAsync(NewUser.UserName);
             await _userManager.AddToRoleAsync(u, "Student");
 
-            return Ok(result);
+            //token part
+            var key = Encoding.UTF8.GetBytes(_AppSetting.JWT_Secret);
+            var User = await _userManager.FindByNameAsync(NewUser.UserName);
+            var role = await _roleManager.FindByNameAsync(NewUser.UserName);
+            if (User != null && await _userManager.CheckPasswordAsync(User, NewUser.Password))
+            {
+                var Token = TokenHelpers.CreateToken(User, key);
+                var userrole = role.Name;
+                return Ok(new { Token, userrole });
+            }
+            else
+            {
+                return BadRequest(new { message = "Login Info not valid" });
+            }
+
+
         }
 
         [HttpPost]
@@ -103,18 +118,19 @@ namespace onlinelearningbackend.Controllers
         public async Task<IActionResult> PostLogin([FromForm] UserLoginModel model)
         {
             var IsInfoValid = ModelState.IsValid;
-            if(IsInfoValid==false)
+            if (IsInfoValid == false)
             {
                 return BadRequest(new { message = "Login Info not valid" });
 
             }
             var key = Encoding.UTF8.GetBytes(_AppSetting.JWT_Secret);
             var User = await _userManager.FindByNameAsync(model.UserName);
-            if(User !=null && await _userManager.CheckPasswordAsync(User, model.Password))
+            var role = await _roleManager.FindByNameAsync(model.UserName);
+            if (User != null && await _userManager.CheckPasswordAsync(User, model.Password))
             {
                 var Token = TokenHelpers.CreateToken(User, key);
-                
-                return Ok(new { Token });
+                var userrole = role.Name;
+                return Ok(new { Token, userrole });
             }
             else
             {
@@ -122,7 +138,7 @@ namespace onlinelearningbackend.Controllers
             }
         }
 
-        
+
 
 
 
@@ -140,22 +156,22 @@ namespace onlinelearningbackend.Controllers
         [Route("api/user/Profile")]
         [Authorize]
         // Get api/user/profile 
-        public async Task<Object> PatchProfile([FromForm]MyUserModel EditedUser)
+        public async Task<Object> PatchProfile([FromForm] MyUserModel EditedUser)
         {
             var file = Request.Form.Files[0];
-            bool IsInfoValid = ModelState.IsValid ;
-            bool IsImageUploaded = file.Length > 0; 
+            bool IsInfoValid = ModelState.IsValid;
+            bool IsImageUploaded = file.Length > 0;
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var UserInDB = await _userManager.FindByIdAsync(UserId);
             string oldImagePath = UserInDB.PrifleImageUrl;
 
             //UserInDB.UserName = EditedUser.UserName;
 
-            if (IsInfoValid==false)
+            if (IsInfoValid == false)
             {
                 return BadRequest(new { message = "invalid Edited info" });
             }
-            if (IsImageUploaded==false)
+            if (IsImageUploaded == false)
             {
                 var user = await _userManager.UpdateAsync(EditedUser);
                 return Ok(user);
@@ -175,7 +191,7 @@ namespace onlinelearningbackend.Controllers
             FSHelpers.DeleteOldImage(oldImagePath);
 
             //return Ok(result);
-            return  result;
+            return result;
         }
 
         ///////////////////////////////////////////////////////////////////
@@ -194,7 +210,7 @@ namespace onlinelearningbackend.Controllers
         //    }
         //}
         //[HttpGet]
-       
+
         //[Route("api/student/trackid/{id}")]
         //public IActionResult GetStudentByTrackId(int id)
         //{
@@ -208,7 +224,7 @@ namespace onlinelearningbackend.Controllers
         //}
         //[HttpGet]
         //[Route("api/student/stdid/{id}")]
- 
+
         //public IActionResult GetStudentByStdId(int id)
         //{
         //    var stds = db.GetStudentByStdId(id);
