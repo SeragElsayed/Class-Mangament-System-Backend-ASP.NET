@@ -30,10 +30,17 @@ namespace onlinelearningbackend.Controllers
         }
 
         [HttpPost]
-        [Route("api/Project/ProjectMaterial/{ProjectId}")]
+        [Route("api/ProjectMaterial/Upload/{ProjectId}")]
         //////////////////////may cause error 
-        public async Task<IActionResult> AddProjectMaterial(int ProjectId, [FromForm] List<IFormFile> files)
+       // public async Task<IActionResult> AddProjectMaterial(int ProjectId, [FromForm(Name = "files")] List<IFormFile> files)
+        public async Task<IActionResult> AddProjectMaterial(int ProjectId)
         {
+            var files = new List<IFormFile>();
+            //var file = Request.Form.Files[0];
+            for (int i = 0; i < Request.Form.Files.Count(); i++)
+            {
+                files.Add(Request.Form.Files[i]);
+            }
             long size = files.Sum(f => f.Length);
             var uploader = new Uploader(hostingEnvironment);
             var AllMaterial = new List<ProjectMaterialModel>();
@@ -58,7 +65,7 @@ namespace onlinelearningbackend.Controllers
 
 
         [HttpGet]
-        [Route("api/Project/DownloadProjectMaterial/{FileName}")]
+        [Route("api/ProjectMaterial/Download/{FileName}")]
 
         private Dictionary<string, string> GetMimeTypes()
         {
@@ -87,7 +94,7 @@ namespace onlinelearningbackend.Controllers
 
 
         [HttpGet]
-        [Route("api/Project/DeleteProjectMaterial/{FileName}")]
+        [Route("api/ProjectMaterial/Delete/{FileName}")]
 
         ///needs to be reviewed
 

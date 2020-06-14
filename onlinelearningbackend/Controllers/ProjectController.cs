@@ -9,7 +9,7 @@ using onlinelearningbackend.Repo.IManager;
 
 namespace onlinelearningbackend.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
     {
