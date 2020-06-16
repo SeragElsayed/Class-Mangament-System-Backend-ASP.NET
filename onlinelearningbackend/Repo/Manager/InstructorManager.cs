@@ -12,13 +12,13 @@ namespace onlinelearningbackend.Repo.Manager
 {
     public class InstructorManager : IInstructorManager
     {
-
+   
         ApplicationDbContext db;
         public InstructorManager(ApplicationDbContext _db
         )
         {
             this.db = _db;
-
+        
         }
         public MyUserModel AddInstructor(MyUserModel NewInstructor)
         {
@@ -36,13 +36,13 @@ namespace onlinelearningbackend.Repo.Manager
 
         public MyUserModel DeleteInstructorById(string InstructorId)
         {
-            var j = db.Users.FromSqlRaw<MyUserModel>($"EXEC dbo.usp_Tracks_Delete '{InstructorId}'").ToList().FirstOrDefault();
+         var j=   db.Users.FromSqlRaw<MyUserModel>($"EXEC dbo.usp_AspNetUsers_Delete '{InstructorId}'").ToList().FirstOrDefault();
             return j;
         }
 
         public MyUserModel EditInstructor(MyUserModel EditedInstructor)
         {
-            var instructor = db.Users.FromSqlRaw<MyUserModel>($"EXEC dbo.usp_Tracks_Update '{EditedInstructor.UserName}'").ToList().FirstOrDefault();
+            var instructor= db.Users.FromSqlRaw<MyUserModel>($"EXEC dbo.usp_Tracks_Update '{EditedInstructor.UserName}'").ToList().FirstOrDefault();
             return instructor;
         }
 
