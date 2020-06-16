@@ -11,7 +11,7 @@ namespace onlinelearningbackend.Repo.IManager
         public UserProjectModel GetUserProjectIdByStudentId(string studentId);
 
        public IEnumerable<UserProjectModel> GetCollaboratorIdByProjectId(int ProjectId);
-        public void AddCollaboratorByUserId(string UserId, int ProjectId);
+        public UserProjectModel AddCollaboratorByUserId(string UserId, int ProjectId);
         public void MakeCollaboratorOwnerByUserId(string UserId);
         public void DeleteCollaboratorByUserId(string UserId);
 

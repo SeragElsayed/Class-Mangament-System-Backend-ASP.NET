@@ -84,7 +84,9 @@ namespace onlinelearningbackend.Controllers
         //ProjectModel AddProject(ProjectModel NewProject, int TrackId);
         [HttpPost]
         [Route("api/Project/Add/{TrackId}")]
-        public IActionResult AddProjectByTrackId([FromBody]ProjectModel NewProject,[FromRoute]int TrackId)
+        [System.Web.Http.Authorize]
+
+        public IActionResult PostAddProjectByTrackId([FromBody]ProjectModel NewProject,[FromRoute]int TrackId)
         {
             if (ModelState.IsValid == false || TrackId < 1)
                 return BadRequest();
@@ -104,9 +106,9 @@ namespace onlinelearningbackend.Controllers
 
         }
         //ProjectModel EditProject(ProjectModel EDitedProject);
-        [HttpPost]
+        [HttpPut]
         [Route("api/Project/Edit")]
-        public IActionResult EditProject([FromBody]ProjectModel EditedProject)
+        public IActionResult PutEditProject([FromBody]ProjectModel EditedProject)
         {
             if (ModelState.IsValid == false )
                 return BadRequest();

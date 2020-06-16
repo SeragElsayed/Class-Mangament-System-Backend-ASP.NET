@@ -10,7 +10,6 @@ using onlinelearningbackend.Repo.IManager;
 
 namespace onlinelearningbackend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class UserProjectRolesController : ControllerBase
     {
@@ -33,14 +32,20 @@ namespace onlinelearningbackend.Controllers
         public async Task<IActionResult> GetCollaboratorIdByProjectId(int ProjectId)
         {
             var userProjectList = UserProjectManager.GetCollaboratorIdByProjectId( ProjectId);
+
+            if (userProjectList.Count() == 0)
+                return Ok();
+
+            string UserId = User?.Claims?.First(c => c.Type == "UserId")?.Value;
             List<Object> Collaborators=new List<Object>();
+
             foreach (var item in userProjectList)
             {
-                var user = await _userManager.FindByIdAsync(item.myUserModel.Id);
-                if (user == null)
+                var user = await _userManager.FindByIdAsync(item?.MyUserModelId);
+                if (user == null || user.Id== UserId)
                     continue;
-               var UserProject= UserProjectManager.GetCollaboratorIdByProjectId(ProjectId);
-                Collaborators.Add(new { User,UserProject});
+               var UserProject= UserProjectManager.GetUserProjectIdByStudentId(item?.MyUserModelId);
+                Collaborators.Add(new { user,UserProject});
             }
 
             if (Collaborators == null)
@@ -59,19 +64,30 @@ namespace onlinelearningbackend.Controllers
 
         [HttpPost]
         [Route("api/PM/{ProjectId}/{Email}")]
-        public async Task<IActionResult> PostAddCollaboratorByEmail(int ProjectId,string Email)
+        [System.Web.Http.Authorize]
+        public async Task<IActionResult> PostAddCollaboratorByEmail([FromRoute]int ProjectId,[FromRoute]string Email)
         {
 
-            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
-            var user = UserProjectManager.GetUserProjectIdByStudentId(UserId);
-
-            if (user.IsOwner == false)
-                return Unauthorized();
-            var CollabortorToAdd = await _userManager.FindByEmailAsync(Email);
-            UserProjectManager.AddCollaboratorByUserId(CollabortorToAdd.Id,ProjectId);
-           
+            string ProjectOwnerId = User.Claims.First(c => c.Type == "UserId").Value;
+            var ProjectOwner = UserProjectManager.GetUserProjectIdByStudentId(ProjectOwnerId);
             
+
+            if (ProjectOwner == null)
+                return Unauthorized();
+
+            if (ProjectOwner.IsOwner == false)
+                return Unauthorized();
+
+            var CollabortorToAdd = await _userManager.FindByEmailAsync(Email);
+
+            var Collaborators = UserProjectManager.GetCollaboratorIdByProjectId(ProjectId);
+
+            if (Collaborators.FirstOrDefault(c => c.MyUserModelId == CollabortorToAdd.Id) != null)
                 return Ok();
+
+            UserProjectManager.AddCollaboratorByUserId(CollabortorToAdd.Id,ProjectId);
+
+            return Ok();
         }
 
 
@@ -102,14 +118,18 @@ namespace onlinelearningbackend.Controllers
         public  IActionResult DeleteCollaboratorByUserId(string StudentId)
         {
 
-            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
-            var user = UserProjectManager.GetUserProjectIdByStudentId(UserId);
+            string OwnerId = User.Claims.First(c => c.Type == "UserId").Value;
+            var owner = UserProjectManager.GetUserProjectIdByStudentId(OwnerId);
 
-            if (user.IsOwner == false)
+            if (owner?.IsOwner == false)
+                return Unauthorized();
+
+            var userToDelete = UserProjectManager.GetUserProjectIdByStudentId(StudentId);
+
+            if (userToDelete?.IsOwner == true)
                 return Unauthorized();
 
             UserProjectManager.DeleteCollaboratorByUserId(StudentId);
-
 
             return Ok();
         }

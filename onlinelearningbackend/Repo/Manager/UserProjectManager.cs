@@ -27,20 +27,20 @@ namespace onlinelearningbackend.Repo.Manager
             var Collaborators = db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Select_By_Project_ID {ProjectId}").ToList<UserProjectModel>();
             return Collaborators;
         }
-        public void AddCollaboratorByUserId(string UserId,int ProjectId)
+        public UserProjectModel AddCollaboratorByUserId(string UserId,int ProjectId)
         {
-            db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Add_Collaborator '{UserId}' , {ProjectId}");
-
+           var addedcolab= db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Add_Collaborator '{UserId}' , {ProjectId}").ToList().FirstOrDefault();
+            return addedcolab;
         }
         public void MakeCollaboratorOwnerByUserId(string UserId)
         {
-           db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Make_Owner '{UserId}'");
+           db.Database.ExecuteSqlRaw($"EXEC dbo.usp_UserProjectModel_Make_Owner '{UserId}'");
            
         }
 
         public void DeleteCollaboratorByUserId(string UserId)
         {
-             db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Delete '{UserId}'");
+            var x= db.Database.ExecuteSqlRaw($"EXEC dbo.usp_UserProjectModel_Delete '{UserId}'");
          
         }
     }
