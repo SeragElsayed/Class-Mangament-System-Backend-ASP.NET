@@ -61,9 +61,9 @@ namespace onlinelearningbackend.Controllers
 
             //IdentityResult res = await _roleManager.CreateAsync(iden);
             ////////////////////
-            var file = Request.Form.Files[0];
+            var file = Request?.Form?.Files?.FirstOrDefault();
             bool IsInfoValid = ModelState.IsValid;
-            bool IsImageUploaded = file.Length > 0;
+            bool IsImageUploaded = file?.Length > 0;
 
             if (IsInfoValid == false)
             {
@@ -129,8 +129,9 @@ namespace onlinelearningbackend.Controllers
             if (User != null && await _userManager.CheckPasswordAsync(User, model.Password))
             {
                 var Token = TokenHelpers.CreateToken(User, key);
-                var userrole = role.Name;
-                return Ok(new { Token, userrole });
+               // var userrole = role.Name;
+                //return Ok(new { Token, userrole });
+                return Ok(new { Token});
             }
             else
             {

@@ -29,7 +29,7 @@ namespace onlinelearningbackend.Repo.Manager
         }
         public IEnumerable<ProjectModel> GetProjectByStudentId(string StudentId)
         {
-            var projects = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Select_By_Student_Id {0}", StudentId).ToList<ProjectModel>();
+            var projects = DB.ProjectModels.FromSqlRaw($"EXEC [E-Learning].usp_ProjectModel_Select_By_Student_Id @StudentId='{StudentId}';").ToList<ProjectModel>();
             return projects;
         }
         public ProjectModel AddProjectByTrackId(ProjectModel NewProject,int TrackId,string StudentId)
