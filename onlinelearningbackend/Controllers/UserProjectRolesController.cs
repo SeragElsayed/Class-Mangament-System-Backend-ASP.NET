@@ -33,13 +33,14 @@ namespace onlinelearningbackend.Controllers
         public async Task<IActionResult> GetCollaboratorIdByProjectId(int ProjectId)
         {
             var userProjectList = UserProjectManager.GetCollaboratorIdByProjectId( ProjectId);
-            List<MyUserModel> Collaborators=new List<MyUserModel>();
+            List<Object> Collaborators=new List<Object>();
             foreach (var item in userProjectList)
             {
                 var user = await _userManager.FindByIdAsync(item.myUserModel.Id);
                 if (user == null)
                     continue;
-                Collaborators.Add(user);
+               var UserProject= UserProjectManager.GetCollaboratorIdByProjectId(ProjectId);
+                Collaborators.Add(new { User,UserProject});
             }
 
             if (Collaborators == null)
@@ -77,8 +78,8 @@ namespace onlinelearningbackend.Controllers
         //public void MakeCollaboratorOwnerByUserId(string UserId);
 
         [HttpPost]
-        [Route("api/PM/MakeOwner/{Email}")]
-        public async Task<IActionResult> PostMakeCollaboratorOwnerByEmail( string Email)
+        [Route("api/PM/MakeOwner/{ColabId}")]
+        public IActionResult PostMakeCollaboratorOwnerByEmail( string ColabId)
         {
 
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
@@ -86,8 +87,8 @@ namespace onlinelearningbackend.Controllers
 
             if (user.IsOwner == false)
                 return Unauthorized();
-            var CollabortorToAdd = await _userManager.FindByEmailAsync(Email);
-            UserProjectManager.MakeCollaboratorOwnerByUserId(CollabortorToAdd.Id);
+            //var CollabortorToAdd = await _userManager.FindByIdAsync(ColabId);
+            UserProjectManager.MakeCollaboratorOwnerByUserId(ColabId);
 
 
             return Ok();

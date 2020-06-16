@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+//using System.Web.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using onlinelearningbackend.Models;
@@ -11,6 +12,7 @@ namespace onlinelearningbackend.Controllers
 {
     //[Route("api/[controller]")]
     [ApiController]
+    [System.Web.Http.Authorize]
     public class ProjectController : ControllerBase
     {
         IProjectManager ProjectManager;
@@ -63,6 +65,7 @@ namespace onlinelearningbackend.Controllers
         //IEnumerable<ProjectModel> GetProjectByStudentId(int StudentId);
         [HttpGet]
         [Route("api/Project/Student")]
+        [System.Web.Http.Authorize]
         public IActionResult GetProjectByStudentId()
         {
             string StudentId = User.Claims.First(c => c.Type == "UserId").Value;
@@ -81,7 +84,7 @@ namespace onlinelearningbackend.Controllers
         //ProjectModel AddProject(ProjectModel NewProject, int TrackId);
         [HttpPost]
         [Route("api/Project/Add/{TrackId}")]
-        public IActionResult AddProjectByTrackId([FromBody]ProjectModel NewProject,int TrackId)
+        public IActionResult AddProjectByTrackId([FromBody]ProjectModel NewProject,[FromRoute]int TrackId)
         {
             if (ModelState.IsValid == false || TrackId < 1)
                 return BadRequest();
