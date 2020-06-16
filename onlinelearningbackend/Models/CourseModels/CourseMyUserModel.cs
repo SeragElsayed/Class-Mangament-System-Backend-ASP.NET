@@ -12,6 +12,8 @@ namespace onlinelearningbackend.Models
         public int? CourseId { get; set; }
         public Course Course { get; set; }
 
+        public bool? IsActive { get; set; } = true;
+
         [ForeignKey("AspNetUsers")]
         public string MyUserModelId { get; set; }
         public MyUserModel MyUserModel { get; set; }

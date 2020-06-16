@@ -60,7 +60,7 @@ namespace onlinelearningbackend.DAL
         }
         public Course EditCourse(Course EditedCourse)
         {
-            var Course = DB.Courses.FromSqlRaw("EXEC dbo.usp_Courses_Insert {0},{1},{2},{3},{4},{5},{6}",
+            var Course = DB.Courses.FromSqlRaw("EXEC dbo.usp_Courses_Update {0},{1},{2},{3},{4},{5},{6}",
                                                 EditedCourse.CourseId,
                                                 EditedCourse.CourseName,
                                                 EditedCourse.Description,
@@ -76,13 +76,12 @@ namespace onlinelearningbackend.DAL
 
         public void DeleteCoursesByCourseId(int CourseId)
         {
-            DB.Courses.FromSqlRaw("EXEC dbo.usp_Courses_Delete {0}", CourseId).ToList<Course>();
-
+           // var x = DB.Database.ExecuteSqlRaw("select * from Courses");
+            var x = DB.Database.ExecuteSqlRaw($"EXEC dbo.usp_Courses_Delete {CourseId}");
         }
         public void EnrollStudentInCourse(int CourseId, string StudentId)
         {
             DB.Courses.FromSqlRaw("EXEC dbo.usp_CourseMyUserModel_Insert {0}", CourseId, StudentId).ToList<Course>();
-
         }
 
     }

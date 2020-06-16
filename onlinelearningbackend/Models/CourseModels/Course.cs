@@ -24,6 +24,8 @@ namespace onlinelearningbackend.Models
         [Required]
         public string EnrollmentKey { get; set; }
 
+        public bool? IsActive { get; set; } = true;
+
         public int? TrackId { get; set; }
         public virtual Track Track { get; set; }
         public virtual Topic Topic { get; set; }
