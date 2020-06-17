@@ -78,6 +78,8 @@ namespace onlinelearningbackend
             services.AddScoped<IProjectMaterialManager, ProjectMaterialManager>();
             services.AddScoped<IProjectManager, ProjectManager>();
             services.AddScoped<IUserProjectManager, UserProjectManager>();
+            services.AddScoped<IInstructorManager, InstructorManager>();
+
 
 
             services.AddDbContext<ApplicationDbContext>(options =>
