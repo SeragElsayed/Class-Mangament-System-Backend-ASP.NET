@@ -44,7 +44,7 @@ namespace onlinelearningbackend.Controllers
                 var user = await _userManager.FindByIdAsync(item?.MyUserModelId);
                 if (user == null || user.Id== UserId)
                     continue;
-               var UserProject= UserProjectManager.GetUserProjectIdByStudentId(item?.MyUserModelId);
+               var UserProject= UserProjectManager.GetUserProjectIdByStudentIdAndProjectId(item?.MyUserModelId,ProjectId);
                 Collaborators.Add(new { user,UserProject});
             }
 
@@ -69,7 +69,7 @@ namespace onlinelearningbackend.Controllers
         {
 
             string ProjectOwnerId = User.Claims.First(c => c.Type == "UserId").Value;
-            var ProjectOwner = UserProjectManager.GetUserProjectIdByStudentId(ProjectOwnerId);
+            var ProjectOwner = UserProjectManager.GetUserProjectIdByStudentIdAndProjectId(ProjectOwnerId,ProjectId);
             
 
             if (ProjectOwner == null)
@@ -94,17 +94,17 @@ namespace onlinelearningbackend.Controllers
         //public void MakeCollaboratorOwnerByUserId(string UserId);
 
         [HttpPost]
-        [Route("api/PM/MakeOwner/{ColabId}")]
-        public IActionResult PostMakeCollaboratorOwnerByEmail( string ColabId)
+        [Route("api/PM/MakeOwner/{ColabId}/{ProjectId}")]
+        public IActionResult PostMakeCollaboratorOwnerByEmail( string ColabId,int ProjectId)
         {
 
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
-            var user = UserProjectManager.GetUserProjectIdByStudentId(UserId);
+            var user = UserProjectManager.GetUserProjectIdByStudentIdAndProjectId(UserId,ProjectId);
 
             if (user.IsOwner == false)
                 return Unauthorized();
             //var CollabortorToAdd = await _userManager.FindByIdAsync(ColabId);
-            UserProjectManager.MakeCollaboratorOwnerByUserId(ColabId);
+            UserProjectManager.MakeCollaboratorOwnerByUserIdAndProjectId(ColabId,ProjectId);
 
 
             return Ok();
@@ -114,22 +114,22 @@ namespace onlinelearningbackend.Controllers
 
 
         [HttpDelete]
-        [Route("api/PM/Remove/{StudentId}")]
-        public  IActionResult DeleteCollaboratorByUserId(string StudentId)
+        [Route("api/PM/Remove/{StudentId}/{ProjectId}")]
+        public  IActionResult DeleteCollaboratorByUserId(string StudentId,int ProjectId)
         {
 
             string OwnerId = User.Claims.First(c => c.Type == "UserId").Value;
-            var owner = UserProjectManager.GetUserProjectIdByStudentId(OwnerId);
+            var owner = UserProjectManager.GetUserProjectIdByStudentIdAndProjectId(OwnerId,ProjectId);
 
             if (owner?.IsOwner == false)
                 return Unauthorized();
 
-            var userToDelete = UserProjectManager.GetUserProjectIdByStudentId(StudentId);
+            var userToDelete = UserProjectManager.GetUserProjectIdByStudentIdAndProjectId(StudentId,ProjectId);
 
             if (userToDelete?.IsOwner == true)
                 return Unauthorized();
 
-            UserProjectManager.DeleteCollaboratorByUserId(StudentId);
+            UserProjectManager.DeleteCollaboratorByUserIdAndProjectId(StudentId,ProjectId);
 
             return Ok();
         }

@@ -17,9 +17,9 @@ namespace onlinelearningbackend.Repo.Manager
             this.db = _db;
         }
 
-        public UserProjectModel GetUserProjectIdByStudentId(string studentId)
+        public UserProjectModel GetUserProjectIdByStudentIdAndProjectId(string studentId, int ProjectId)
         {
-            var UserProject = db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Select_By_Student_ID '{studentId}'").ToList<UserProjectModel>().FirstOrDefault();
+            var UserProject = db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Select_By_Student_ID_And_Project_Id '{studentId}',{ProjectId}").ToList<UserProjectModel>().FirstOrDefault();
             return UserProject;
         }
         public IEnumerable<UserProjectModel> GetCollaboratorIdByProjectId(int ProjectId)
@@ -32,15 +32,15 @@ namespace onlinelearningbackend.Repo.Manager
            var addedcolab= db.UserProjectModels.FromSqlRaw<UserProjectModel>($"EXEC dbo.usp_UserProjectModel_Add_Collaborator '{UserId}' , {ProjectId}").ToList().FirstOrDefault();
             return addedcolab;
         }
-        public void MakeCollaboratorOwnerByUserId(string UserId)
+        public void MakeCollaboratorOwnerByUserIdAndProjectId(string UserId, int ProjectId)
         {
-           db.Database.ExecuteSqlRaw($"EXEC dbo.usp_UserProjectModel_Make_Owner '{UserId}'");
+           db.Database.ExecuteSqlRaw($"EXEC dbo.usp_UserProjectModel_Make_Owner '{UserId}',{ProjectId}");
            
         }
 
-        public void DeleteCollaboratorByUserId(string UserId)
+        public void DeleteCollaboratorByUserIdAndProjectId(string UserId,int ProjectId)
         {
-            var x= db.Database.ExecuteSqlRaw($"EXEC dbo.usp_UserProjectModel_Delete '{UserId}'");
+            var x= db.Database.ExecuteSqlRaw($"EXEC dbo.usp_UserProjectModel_Delete '{UserId}',{ProjectId}");
          
         }
     }

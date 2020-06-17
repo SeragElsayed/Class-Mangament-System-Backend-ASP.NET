@@ -8,12 +8,12 @@ namespace onlinelearningbackend.Repo.IManager
 {
    public interface IUserProjectManager
     {
-        public UserProjectModel GetUserProjectIdByStudentId(string studentId);
+        public UserProjectModel GetUserProjectIdByStudentIdAndProjectId(string studentId,int ProjectId);
 
        public IEnumerable<UserProjectModel> GetCollaboratorIdByProjectId(int ProjectId);
         public UserProjectModel AddCollaboratorByUserId(string UserId, int ProjectId);
-        public void MakeCollaboratorOwnerByUserId(string UserId);
-        public void DeleteCollaboratorByUserId(string UserId);
+        public void MakeCollaboratorOwnerByUserIdAndProjectId(string UserId,int ProjectId);
+        public void DeleteCollaboratorByUserIdAndProjectId(string UserId,int ProjectId);
 
 
 
