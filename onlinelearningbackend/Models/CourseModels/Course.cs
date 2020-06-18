@@ -19,7 +19,7 @@ namespace onlinelearningbackend.Models
         [Required]
 
         public int IntervalInDays { get; set; }
-        public DateTime StartingDate { get; set; }
+        //public DateTime StartingDate { get; set; }
 
         [Required]
         public string EnrollmentKey { get; set; }
