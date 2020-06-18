@@ -16,10 +16,44 @@ namespace onlinelearningbackend.Repo.Manager
         {
             this.db = _db;
         }
-        public List<Track> GetAllTracksByBranchId(int branchId)
+        public List<Track> GetAllTracks()
         {
-            var tracks = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_BrId {branchId}").ToList<Track>();
+            var tracks = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Select ").ToList<Track>();
             return tracks;
+        }
+        public Track GetTrackByTrackId(int trackId)
+        {
+            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Track_Track_Id {trackId}").ToList<Track>().FirstOrDefault();
+            return track;
+        }
+        public Track EditTrack(Track EditedTrack)
+        {
+            var track = db.Tracks.FromSqlRaw<Track>("EXEC dbo.usp_Tracks_Update {0},{1},{2}",
+                EditedTrack.TrackId,
+                EditedTrack.TrackName,
+                EditedTrack.BranchId
+                ).ToList().FirstOrDefault();
+            return track;
+        }
+        public Track AddTrack(Track NewTrack)
+        {
+            var track = db.Tracks.FromSqlRaw<Track>("EXEC dbo.usp_Tracks_Insert {0},{1},{2}"
+                ,NewTrack.TrackName
+                ,NewTrack.BranchId
+                ,NewTrack.IsActive).ToList().FirstOrDefault();
+            return track;
+        }
+        public Track DeleteTrackById(int TrackId)
+        {
+
+         var track=db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Delete {TrackId}").ToList().FirstOrDefault();
+            return track;
+        }
+
+        public Track GetAllTracksByTrackId(int TrackId)
+        {
+            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Track_Id {TrackId}").ToList<Track>().FirstOrDefault();
+            return track;
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace onlinelearningbackend.Repo.Manager
 {
-    public class BranchManager : IBranchManager
+    public class BranchManager:IBranchManager
     {
         ApplicationDbContext db;
         public BranchManager(ApplicationDbContext _db)
@@ -24,35 +24,36 @@ namespace onlinelearningbackend.Repo.Manager
         }
         public Branch GetBranchById(int BranchId)
         {
-            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Select_By_Id {0}", BranchId).FirstOrDefault();
+            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Select_By_Id {0}", BranchId).ToList().FirstOrDefault();
             return branch;
         }
         public Branch EditBranchById(Branch EditedBranch)
         {
-            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Update {0},{1},{2},{3}",
+            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Update {0},{1},{2},{3},{4}",
                                                         EditedBranch.BranchId,
                                                         EditedBranch.BranchName,
                                                         EditedBranch.BranchEmail,
-                                                        EditedBranch.BranchTelephone)
+                                                        EditedBranch.BranchTelephone,
+                                                        EditedBranch.IsActive).ToList()
                                                         .FirstOrDefault();
             return branch;
         }
-        public Branch AddBranch(Branch NewBranch)
+        public Branch AddBranch( Branch NewBranch)
         {
             var branch = db.Branches.FromSqlRaw<Branch>("EXEC  dbo.usp_Branches_Insert {0},{1},{2},{3}",
                                                            NewBranch.BranchName,
                                                            NewBranch.BranchEmail,
                                                            NewBranch.BranchTelephone,
                                                            NewBranch.IsActive).ToList().FirstOrDefault();
-
+            
             return branch;
         }
         public Branch DeleteBranchById(int BranchId)
         {
-            var branch = db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Delete {0}", BranchId).ToList().FirstOrDefault();
+            var branch=db.Branches.FromSqlRaw<Branch>("EXEC dbo.usp_Branches_Delete {0}", BranchId).ToList().FirstOrDefault();
             return branch;
         }
 
-
+       
     }
 }

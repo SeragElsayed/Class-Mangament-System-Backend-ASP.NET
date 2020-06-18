@@ -40,7 +40,7 @@ namespace onlinelearningbackend.Controllers
             }
 
         }
-
+       
         [HttpPost]
         [Route("api/instructor/Add")]
         public async Task<ActionResult> PostNewInstructor([FromForm] UserRegisterModel Newinstructor)
@@ -76,7 +76,7 @@ namespace onlinelearningbackend.Controllers
         [Route("api/instructor/Delete/{InstructorId}")]
         public IActionResult DeleteInstructor(string InstructorId)
         {
-
+            
             db.DeleteInstructorById(InstructorId);
 
             return Ok();

@@ -17,6 +17,13 @@ namespace onlinelearningbackend.Repo.Manager
             DB = _DB;
         }
 
+
+        public IEnumerable<ProjectModel> GetAllProjects()
+        {
+            var projects = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModels_Select").ToList<ProjectModel>();
+            return projects;
+        }
+
         public ProjectModel GetProjectById(int ProjectId)
         {
             var projects= DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Select_By_Id {0}", ProjectId).ToList<ProjectModel>().FirstOrDefault();
@@ -29,12 +36,12 @@ namespace onlinelearningbackend.Repo.Manager
         }
         public IEnumerable<ProjectModel> GetProjectByStudentId(string StudentId)
         {
-            var projects = DB.ProjectModels.FromSqlRaw($"EXEC [E-Learning].usp_ProjectModel_Select_By_Student_Id @StudentId='{StudentId}';").ToList<ProjectModel>();
+            var projects = DB.ProjectModels.FromSqlRaw($"EXEC dbo.usp_ProjectModel_Select_By_Student_Id '{StudentId}';").ToList<ProjectModel>();
             return projects;
         }
         public ProjectModel AddProjectByTrackId(ProjectModel NewProject,int TrackId,string StudentId)
         {
-            var project = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Insert {0},{1},{2}", 
+            var project = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Insert {0},{1},{2},{3}", 
                                                         NewProject.ProjectName,
                                                         NewProject.ProjectDescription,
                                                         TrackId,

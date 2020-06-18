@@ -15,7 +15,6 @@ using onlinelearningbackend.Repo.IManager;
 
 namespace onlinelearningbackend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class ProjectMaterialController : ControllerBase
     {
@@ -64,9 +63,6 @@ namespace onlinelearningbackend.Controllers
         }
 
 
-        [HttpGet]
-        [Route("api/ProjectMaterial/Download/{FileName}")]
-
         private Dictionary<string, string> GetMimeTypes()
         {
             return new Dictionary<string, string>
@@ -78,6 +74,9 @@ namespace onlinelearningbackend.Controllers
                 {".png","image/png" },
             };
         }
+
+        [HttpGet]
+        [Route("api/ProjectMaterial/Download/{FileName}")]
         public async Task<IActionResult> DownloadProjectMaterial(string FileName)
         {
 
