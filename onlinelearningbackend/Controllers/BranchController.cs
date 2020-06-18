@@ -73,7 +73,7 @@ namespace onlinelearningbackend.Controllers
             return Ok(BranchInDb);
 
         }
-        [HttpDelete]
+        [HttpGet]
         [Route("api/branch/Delete/{BranchId}")]
         public IActionResult DeleteBranch(int BranchId)
         {
