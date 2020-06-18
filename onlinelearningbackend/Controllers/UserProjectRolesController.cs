@@ -11,6 +11,8 @@ using onlinelearningbackend.Repo.IManager;
 namespace onlinelearningbackend.Controllers
 {
     [ApiController]
+    [System.Web.Http.Authorize]
+
     public class UserProjectRolesController : ControllerBase
     {
         IUserProjectManager UserProjectManager;
@@ -29,6 +31,7 @@ namespace onlinelearningbackend.Controllers
 
         [HttpGet]
         [Route("api/PM/{ProjectId}")]
+
         public async Task<IActionResult> GetCollaboratorIdByProjectId(int ProjectId)
         {
             var userProjectList = UserProjectManager.GetCollaboratorIdByProjectId( ProjectId);
@@ -64,7 +67,6 @@ namespace onlinelearningbackend.Controllers
 
         [HttpPost]
         [Route("api/PM/{ProjectId}/{Email}")]
-        [System.Web.Http.Authorize]
         public async Task<IActionResult> PostAddCollaboratorByEmail([FromRoute]int ProjectId,[FromRoute]string Email)
         {
 
@@ -79,6 +81,9 @@ namespace onlinelearningbackend.Controllers
                 return Unauthorized();
 
             var CollabortorToAdd = await _userManager.FindByEmailAsync(Email);
+
+            if (CollabortorToAdd == null)
+                return NotFound();
 
             var Collaborators = UserProjectManager.GetCollaboratorIdByProjectId(ProjectId);
 
