@@ -10,6 +10,7 @@ namespace onlinelearningbackend.Models
         public int VideoMaterialId { get; set; }
         public string VideoMaterialName { get; set; }
         public string URL { get; set; }
+        public int CourseId { get; set; }
         public virtual Course Course { get; set; }
 
     }

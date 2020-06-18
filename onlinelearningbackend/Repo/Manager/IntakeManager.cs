@@ -20,12 +20,13 @@ namespace onlinelearningbackend.Repo.Manager
             }
             public List<Intake> GetAllIntakes()
             {
-                var Intakes = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_Select").ToList<Intake>();
+                var Intakes = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_SelectAll").ToList<Intake>();
                 return Intakes;
             }
             public Intake GetIntakeById(int IntakeId)
             {
-                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_Select_By_Id {0}", IntakeId).ToList().FirstOrDefault();
+                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_SelectById {0}", IntakeId)
+                                                                                    .ToList().FirstOrDefault();
                 return Intake;
             }
             public Intake EditIntakeById(Intake EditedIntake)
@@ -46,7 +47,8 @@ namespace onlinelearningbackend.Repo.Manager
             }
             public Intake DeleteIntakeById(int IntakeId)
             {
-                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_Delete {0}", IntakeId).ToList().FirstOrDefault();
+                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_Delete {0}", IntakeId)
+                                                                                .ToList().FirstOrDefault();
                 return Intake;
             }
 
