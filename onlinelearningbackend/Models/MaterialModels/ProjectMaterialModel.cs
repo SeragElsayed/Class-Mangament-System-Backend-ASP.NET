@@ -18,5 +18,7 @@ namespace onlinelearningbackend.Models
         public int? ProjectId { get; set; }
         [Required]
         public ProjectModel Project { get; set; }
+
+        public string Category { get; set; }
     }
 }
