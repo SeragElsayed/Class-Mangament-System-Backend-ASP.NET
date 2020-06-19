@@ -70,6 +70,7 @@ namespace onlinelearningbackend
             services.AddScoped<ITaskSolutionManager, TaskSolutionManager>();
             services.AddScoped<IBranchManager, BranchManager>();
             services.AddScoped<ITrackManager, TrackManager>();
+            services.AddScoped<IIntakeManager, IntakeManager>();
             services.AddScoped<ITaskManager, taskManager>();
             services.AddScoped<IMaterialLinkManager, MaterialLinkManager>();
             services.AddScoped<IMaterialTextManager, MaterialTextManager>();

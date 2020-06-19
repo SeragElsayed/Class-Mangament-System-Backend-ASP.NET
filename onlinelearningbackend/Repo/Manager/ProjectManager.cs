@@ -19,6 +19,7 @@ namespace onlinelearningbackend.Repo.Manager
 
 
         public IEnumerable<ProjectModel> GetAllProjects()
+            
         {
             var projects = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModels_Select").ToList<ProjectModel>();
             return projects;

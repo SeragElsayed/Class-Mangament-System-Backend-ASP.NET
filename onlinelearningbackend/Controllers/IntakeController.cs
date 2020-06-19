@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using onlinelearningbackend.Models;
 using onlinelearningbackend.Repo.IManager;
 
+
 namespace onlinelearningbackend.Controllers
 {
 
-    [ApiController]
+   // [ApiController]
 
     public class IntakeController : Controller
     {
@@ -39,8 +40,10 @@ namespace onlinelearningbackend.Controllers
             }
 
         }
+
+
         [HttpGet]
-        [Route("api/Intake/{IntakeId}")]
+        [Route("api/Intake/intakeid/{IntakeId}")]
         public IActionResult GetIntakeById(int IntakeId)
         {
             if (IntakeId < 1)
@@ -54,6 +57,9 @@ namespace onlinelearningbackend.Controllers
             return Ok(Intakes);
 
         }
+
+
+
         [HttpPost]
         [Route("api/Intake/Add")]
         public IActionResult PostNewIntake([FromForm] Intake NewIntake)
