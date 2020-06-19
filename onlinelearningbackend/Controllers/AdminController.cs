@@ -50,5 +50,15 @@ namespace onlinelearningbackend.Controllers
                 return NotFound();
             return Ok(course);
         }
+
+        [HttpGet]
+        [Route("api/admin/Intakes")]
+        public IActionResult GEtTotalIntakes()
+        {
+            var course = admin.GetTotakCourses();
+            if (course == null)
+                return NotFound();
+            return Ok(course);
+        }
     }
 }
