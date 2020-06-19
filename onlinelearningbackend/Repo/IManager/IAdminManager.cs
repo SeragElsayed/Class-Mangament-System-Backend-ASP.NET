@@ -11,6 +11,7 @@ namespace onlinelearningbackend.Repo.IManager
         int GetTotakTracks();
         int GetTotakInstructors();
         int GetTotakCourses();
-     
+        int GetTotalIntakes();
+
     }
 }
