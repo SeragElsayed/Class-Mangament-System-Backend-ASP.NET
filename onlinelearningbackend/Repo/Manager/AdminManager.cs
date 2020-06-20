@@ -28,15 +28,14 @@ namespace onlinelearningbackend.Repo.Manager
 
         public int GetTotakCourses()
         {
-            //   var total = db.Courses.FromSqlRaw<Course>("EXEC dbo.usp_Number_Course").ToList().Count();
-            int total = 0;
+            var total = db.Courses.FromSqlRaw("EXEC dbo.usp_Courses_SelectAll").ToList<Course>().Count();
+           
             return total;
         }
 
         public int GetTotakInstructors()
         {
-            //int total = 0;
-            //return total;
+            
             var total = db.Users.FromSqlRaw<MyUserModel>(" EXEC dbo.usp_Number_Instructor").ToList().Count();
             return total;
         }
@@ -52,6 +51,12 @@ namespace onlinelearningbackend.Repo.Manager
 
             var total = db.Intakes.FromSqlRaw<Intake>(" EXEC dbo.usp_Number_Intake").ToList().Count();
             return total;
+        }
+        public int GetAllProjects()
+
+        {
+            var projects = db.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModels_Select").ToList<ProjectModel>().Count();
+            return projects;
         }
     }
 }
