@@ -52,13 +52,13 @@ namespace onlinelearningbackend.Controllers
         }
 
         [HttpGet]
-        [Route("api/admin/Intakes")]
-        public IActionResult GEtTotalIntakes()
+        [Route("api/admin/Projects")]
+        public IActionResult GEtTotalProjects()
         {
-            var course = admin.GetTotakCourses();
-            if (course == null)
+            var project = admin.GetAllProjects();
+            if (project == null)
                 return NotFound();
-            return Ok(course);
+            return Ok(project);
         }
     }
 }

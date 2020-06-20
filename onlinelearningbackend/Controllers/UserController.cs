@@ -54,15 +54,18 @@ namespace onlinelearningbackend.Controllers
         {
 
             //to create role
-           // MyRoleModel iden = new MyRoleModel
+            // MyRoleModel iden = new MyRoleModel
             //{
-              //  Name = "Student"
+            //  Name = "Student"
             //};
 
 
-//            IdentityResult res = await _roleManager.CreateAsync(iden);
+            //            IdentityResult res = await _roleManager.CreateAsync(iden);
             ////////////////////
-
+            //to get the intake for the user 
+            //var intake = NewUser.IntakeId; 
+            
+            ///////////////////////////
             var file = Request?.Form?.Files?.FirstOrDefault();
             bool IsInfoValid = ModelState.IsValid;
             bool IsImageUploaded = file?.Length > 0;
@@ -73,7 +76,12 @@ namespace onlinelearningbackend.Controllers
             }
             if (  IsImageUploaded==  false)
                 {
-                    var user = await _userManager.CreateAsync(NewUser, NewUser.Password);
+                //if user exists
+                var checkuser = await _userManager.FindByNameAsync(NewUser.UserName);
+                if (checkuser != null)
+                    return StatusCode(409, $"User '{NewUser.UserName}' already exists.");
+                ///////////
+                var user = await _userManager.CreateAsync(NewUser, NewUser.Password);
                 // to assign role to user 
                 var userdata = await _userManager.FindByNameAsync(NewUser.UserName);
                 await _userManager.AddToRoleAsync(userdata, "Student");
@@ -104,7 +112,11 @@ namespace onlinelearningbackend.Controllers
             var dbImagePath = FSHelpers.SaveProfileImage(NewUser, uploadedfilename, file);
             
             NewUser.PrifleImageUrl = dbImagePath;
-
+            //if user exists
+            var checkuser2 = await _userManager.FindByNameAsync(NewUser.UserName);
+            if (checkuser2 != null)
+                return StatusCode(409, $"User '{NewUser.UserName}' already exists.");
+            ///////////
             var result = await _userManager.CreateAsync(NewUser, NewUser.Password);
             // to assign role to user 
             var u = await _userManager.FindByNameAsync(NewUser.UserName);
