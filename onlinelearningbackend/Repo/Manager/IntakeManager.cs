@@ -23,9 +23,9 @@ namespace onlinelearningbackend.Repo.Manager
                 var Intakes = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_SelectAll").ToList<Intake>();
                 return Intakes;
             }
-            public Intake GetIntakeById(int IntakeId)
+            public Intake GetIntakeByName(int IntakeName)
             {
-                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_Select {0}", IntakeId)
+                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_SelectByName {0}", IntakeName)
                                                                                     .ToList().FirstOrDefault();
                 return Intake;
             }
@@ -39,8 +39,8 @@ namespace onlinelearningbackend.Repo.Manager
             }
             public Intake AddIntake(Intake NewIntake)
             {
-                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC  dbo.usp_Intakes_Insert {0}",
-                                                               NewIntake.IntakeName
+                var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC  dbo.usp_Intakes_Insert {0},{1}",
+                                                               NewIntake.IntakeName,NewIntake.IsActive
                                                                ).ToList().FirstOrDefault();
 
                 return Intake;
