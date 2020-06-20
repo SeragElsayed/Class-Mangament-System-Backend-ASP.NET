@@ -9,7 +9,7 @@ namespace onlinelearningbackend.Repo.IManager
     public interface IIntakeManager
     {
         List<Intake> GetAllIntakes();
-        Intake GetIntakeById(int IntakeId);
+        Intake GetIntakeByName(int IntakeName);
         Intake AddIntake(Intake NewIntake);
         Intake EditIntakeById(Intake EditedIntake);
         Intake DeleteIntakeById(int IntakeId);

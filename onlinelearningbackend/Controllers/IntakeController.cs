@@ -42,21 +42,21 @@ namespace onlinelearningbackend.Controllers
         }
 
 
-        [HttpGet]
-        [Route("api/Intake/intakeid/{IntakeId}")]
-        public IActionResult GetIntakeById(int IntakeId)
-        {
-            if (IntakeId < 1)
-                return BadRequest();
+        //[HttpGet]
+        //[Route("api/Intake/intakeid/{IntakeId}")]
+        //public IActionResult GetIntakeById(int IntakeId)
+        //{
+        //    if (IntakeId < 1)
+        //        return BadRequest();
 
-            var Intakes = IntakeManager.GetIntakeById(IntakeId);
+        //    var Intakes = IntakeManager.GetIntakeById(IntakeId);
 
-            if (Intakes == null)
-                return NotFound();
+        //    if (Intakes == null)
+        //        return NotFound();
 
-            return Ok(Intakes);
+        //    return Ok(Intakes);
 
-        }
+        //}
 
 
 

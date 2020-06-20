@@ -18,6 +18,7 @@ using onlinelearningbackend.Helpers;
 using onlinelearningbackend.Repo.IManager;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.CodeAnalysis.Differencing;
+using onlinelearningbackend.Repo.Manager;
 
 namespace onlinelearningbackend.Controllers
 {
@@ -28,17 +29,17 @@ namespace onlinelearningbackend.Controllers
        
         private readonly UserManager<MyUserModel> _userManager;
         private readonly RoleManager<MyRoleModel> _roleManager;
-        //IStudentManager db;
+        IIntakeManager db;
         private readonly ApplicationSetting _AppSetting;
 
         public UserController(
-            //IStudentManager _db,
-            UserManager<MyUserModel> userManager,
+              IIntakeManager _db,
+        UserManager<MyUserModel> userManager,
             SignInManager<MyUserModel> signInManager,
             RoleManager<MyRoleModel> roleManager,
             IOptions<ApplicationSetting> AppSetting)
         {
-            //this.db = _db;
+            this.db = _db;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
@@ -64,8 +65,17 @@ namespace onlinelearningbackend.Controllers
             ////////////////////
             //to get the intake for the user 
             //var intake = NewUser.IntakeId; 
-            
+
+
             ///////////////////////////
+            //to get the intakeid
+            int intakename=NewUser.IntakeId.GetValueOrDefault();
+            var intake = db.GetIntakeByName(intakename);
+            if (intake == null)
+                return NotFound();
+            NewUser.IntakeId = intake.IntakeId;
+
+            /////////////////
             var file = Request?.Form?.Files?.FirstOrDefault();
             bool IsInfoValid = ModelState.IsValid;
             bool IsImageUploaded = file?.Length > 0;
