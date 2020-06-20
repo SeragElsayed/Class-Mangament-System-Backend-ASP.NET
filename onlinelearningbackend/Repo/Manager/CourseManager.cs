@@ -42,20 +42,20 @@ namespace onlinelearningbackend.DAL
             return Courses;
         }
         //public Course AddCourse(Course NewCourse, string InstructorId)
-        public Course AddCourse(Course NewCourse, string InstructorId, int TrackId)
+        public IEnumerable<Course> AddCourse(Course NewCourse, string InstructorId, int TrackId)
 
 
         {
-            var course = DB.Courses.FromSqlRaw("EXEC dbo.usp_Courses_Insert {0},{1},{2},{3},{4},{5},{6}"
+            var course = DB.Courses.FromSqlRaw("EXEC dbo.usp_Courses_Insert {0},{1},{2},{3},{4},{5}"
                                                 , NewCourse.CourseName,
                                                 NewCourse.Description,
                                                 NewCourse.IntervalInDays,
-                                                NewCourse.StartingDate,
+                                                //NewCourse.StartingDate,
                                                 NewCourse.EnrollmentKey,
                                                 //NewCourse.Topic,//.TopicId,
                                                 TrackId,
                                                 InstructorId
-                                                ).ToList<Course>().FirstOrDefault();
+                                                );
             return course;
         }
         public Course EditCourse(Course EditedCourse)
@@ -65,7 +65,7 @@ namespace onlinelearningbackend.DAL
                                                 EditedCourse.CourseName,
                                                 EditedCourse.Description,
                                                 EditedCourse.IntervalInDays,
-                                                EditedCourse.StartingDate,
+                                                //EditedCourse.StartingDate,
                                                 EditedCourse.EnrollmentKey,
                                                 EditedCourse.Topic.TopicId,
                                                 EditedCourse.Track.TrackId

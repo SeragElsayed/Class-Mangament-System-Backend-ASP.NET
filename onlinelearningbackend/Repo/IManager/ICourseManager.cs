@@ -14,7 +14,7 @@ namespace onlinelearningbackend.DAL
         IEnumerable<Course> CoursesByInstructorId(string InstructorId);
         IEnumerable<Course> CoursesByTrackId(int TrackId);
         //Course AddCourse(Course NewCourse, string InstructorId);
-        Course AddCourse(Course course, string UserId, int TrackId);
+        IEnumerable<Course> AddCourse(Course course, string UserId, int TrackId);
 
         Course EditCourse(Course EditedCourse);
         void DeleteCoursesByCourseId(int CourseId);

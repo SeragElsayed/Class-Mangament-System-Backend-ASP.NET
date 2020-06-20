@@ -20,7 +20,7 @@ namespace onlinelearningbackend.Repo.Manager
         public IEnumerable<ProjectMaterialModel> AddMaterial(int ProjectId, string PathOnServer)
         {
             var material = DB.ProjectMaterialModels.FromSqlRaw<ProjectMaterialModel>
-                ($"EXEC dbo.usp_ProjectMaterialModel_Insert '{PathOnServer}',{ProjectId}");
+                ($"EXEC dbo.usp_ProjectMaterialModel_Insert '{PathOnServer}',{ProjectId}").ToList<ProjectMaterialModel>();
             return material;
         }
 

@@ -47,5 +47,11 @@ namespace onlinelearningbackend.Repo.Manager
             var total = db.Tracks.FromSqlRaw<Track>(" EXEC dbo.usp_Number_Track").ToList().Count();
             return total;
         }
+        public int GetTotalIntakes()
+        {
+
+            var total = db.Intakes.FromSqlRaw<Intake>(" EXEC dbo.usp_Number_Intake").ToList().Count();
+            return total;
+        }
     }
 }

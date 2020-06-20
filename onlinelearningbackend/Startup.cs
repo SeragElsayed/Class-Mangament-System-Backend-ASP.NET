@@ -25,6 +25,8 @@ using onlinelearningbackend.Repo.IManager;
 using onlinelearningbackend.Repo.Manager;
 using onlinelearningbackend.Manager;
 using onlinelearningbackend.Repository.Repo;
+using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace onlinelearningbackend
 {
@@ -37,8 +39,7 @@ namespace onlinelearningbackend
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-
+        
         string x = "hi";
         public void ConfigureServices(IServiceCollection services)
         {
@@ -60,12 +61,16 @@ namespace onlinelearningbackend
 
 
 
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers()
+                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
             services.Configure<ApplicationSetting>(Configuration.GetSection("ApplicationSetting"));
             services.AddScoped<ICourseManager,CourseManager>();
             services.AddScoped<ITaskSolutionManager, TaskSolutionManager>();
             services.AddScoped<IBranchManager, BranchManager>();
             services.AddScoped<ITrackManager, TrackManager>();
+            services.AddScoped<IIntakeManager, IntakeManager>();
             services.AddScoped<ITaskManager, taskManager>();
             services.AddScoped<IMaterialLinkManager, MaterialLinkManager>();
             services.AddScoped<IMaterialTextManager, MaterialTextManager>();
@@ -132,7 +137,8 @@ namespace onlinelearningbackend
                 o.MultipartBodyLengthLimit = int.MaxValue;
                 o.MemoryBufferThreshold = int.MaxValue;
             });
-        }
+
+            }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -172,6 +178,7 @@ namespace onlinelearningbackend
                 //endpoints.MapRazorPages();
                 
             });
+
         }
     }
 }

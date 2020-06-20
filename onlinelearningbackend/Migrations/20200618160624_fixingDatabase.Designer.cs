@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlinelearningbackend.Data;
 
 namespace onlinelearningbackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200618160624_fixingDatabase")]
+    partial class fixingDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,24 +236,6 @@ namespace onlinelearningbackend.Migrations
                     b.ToTable("CourseMyUserModel");
                 });
 
-            modelBuilder.Entity("onlinelearningbackend.Models.Intake", b =>
-                {
-                    b.Property<int>("IntakeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("IntakeName")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.HasKey("IntakeId");
-
-                    b.ToTable("Intakes");
-                });
-
             modelBuilder.Entity("onlinelearningbackend.Models.LinkMaterial", b =>
                 {
                     b.Property<int>("LinkMaterialId")
@@ -333,9 +317,6 @@ namespace onlinelearningbackend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("IntakeId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -382,8 +363,6 @@ namespace onlinelearningbackend.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.HasIndex("IntakeId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -403,9 +382,6 @@ namespace onlinelearningbackend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PathOnServer")
                         .IsRequired()
@@ -429,12 +405,6 @@ namespace onlinelearningbackend.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("IntakeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ProjectDescription")
                         .HasColumnType("nvarchar(max)");
 
@@ -446,8 +416,6 @@ namespace onlinelearningbackend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProjectModelId");
-
-                    b.HasIndex("IntakeId");
 
                     b.HasIndex("TrackId");
 
@@ -613,7 +581,7 @@ namespace onlinelearningbackend.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<string>("URL")
@@ -724,10 +692,6 @@ namespace onlinelearningbackend.Migrations
                         .WithMany("MyUserModels")
                         .HasForeignKey("BranchId");
 
-                    b.HasOne("onlinelearningbackend.Models.Intake", "Intake")
-                        .WithMany("MyUserModels")
-                        .HasForeignKey("IntakeId");
-
                     b.HasOne("onlinelearningbackend.Models.Track", "Track")
                         .WithMany("MyUserModels")
                         .HasForeignKey("TrackId");
@@ -744,10 +708,6 @@ namespace onlinelearningbackend.Migrations
 
             modelBuilder.Entity("onlinelearningbackend.Models.ProjectModel", b =>
                 {
-                    b.HasOne("onlinelearningbackend.Models.Intake", "Intake")
-                        .WithMany("ProjectModels")
-                        .HasForeignKey("IntakeId");
-
                     b.HasOne("onlinelearningbackend.Models.Track", "Track")
                         .WithMany("ProjectModels")
                         .HasForeignKey("TrackId");
@@ -806,9 +766,7 @@ namespace onlinelearningbackend.Migrations
                 {
                     b.HasOne("onlinelearningbackend.Models.Course", "Course")
                         .WithMany("VideoMaterials")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
                 });
 #pragma warning restore 612, 618
         }
