@@ -16,54 +16,33 @@ namespace onlinelearningbackend.Repo.Manager
         {
             DB = _DB;
         }
-        ///add material 
-        public IEnumerable<ProjectMaterialModel> AddMaterial(int ProjectId, string PathOnServer)
+
+        public ProjectMaterialModel AddMaterial(int ProjectId, string PathOnServer, string Category)
         {
-            var material = DB.ProjectMaterialModels.FromSqlRaw<ProjectMaterialModel>
-                ($"EXEC dbo.usp_ProjectMaterialModel_Insert '{PathOnServer}',{ProjectId}").ToList<ProjectMaterialModel>();
+            var material = DB.ProjectMaterialModels.FromSqlRaw($"EXEC dbo.usp_ProjectMaterialModel_Insert '{PathOnServer}', {ProjectId},'{Category}'").ToList().FirstOrDefault();
             return material;
         }
 
-        ///delete material by material id
-
-        public IEnumerable<ProjectMaterialModel> DeleteMaterialByMaterialId(int MaterialId)
+        public ProjectMaterialModel DeleteMaterialByMaterialId(int MaterialId)
         {
-            var material = DB.ProjectMaterialModels.FromSqlRaw<ProjectMaterialModel>
-                ($"EXEC dbo.usp_ProjectMaterialModel_DeleteById {MaterialId}");
-            return material;
-        }
-        ///delete material by course id
-        public IEnumerable<ProjectMaterialModel> DeleteMaterialByTrackId(int ProjectId)
-        {
-            var material = DB.ProjectMaterialModels.FromSqlRaw<ProjectMaterialModel>
-                ($"EXEC dbo.usp_ProjectMaterialModel_DeleteByProjectId {ProjectId}");
+            var material = DB.ProjectMaterialModels.FromSqlRaw($"EXEC dbo.usp_ProjectMaterialModel_Delete_by_Material_Id {MaterialId} ").ToList().FirstOrDefault();
             return material;
         }
 
-
-
-        /// get material by course id 
-
-        public IEnumerable<ProjectMaterialModel> GetMaterialByTrackId(int ProjectId)
+        public ProjectMaterialModel DeleteMaterialByPath(string PathOnServer)
         {
-            var material = DB.ProjectMaterialModels.FromSqlRaw<ProjectMaterialModel>
-                ($"EXEC dbo.usp_ProjectMaterialModel_SelectByProjectIdId {ProjectId}");
-            return material;
+            throw new NotImplementedException();
         }
-        /// get material by material id 
-        /// not important
-        public IEnumerable<ProjectMaterialModel> GetMaterialById(int materialId)
+
+        public ProjectMaterialModel GetMaterialByMaterialId(int MaterialId)
         {
-            var material = DB.ProjectMaterialModels.FromSqlRaw<ProjectMaterialModel>
-                ($"EXEC dbo.usp_ProjectMaterialModel_Select {materialId}");
+            var material = DB.ProjectMaterialModels.FromSqlRaw($"EXEC dbo.usp_ProjectMaterialModel_Select_by_material_Id {MaterialId} ").ToList().FirstOrDefault();
             return material;
         }
 
-
-        public IEnumerable<ProjectMaterialModel> DeleteMaterialByPath(string PathOnServer)
+        public IEnumerable<ProjectMaterialModel> GetMaterialByProjectId(int ProjectId)
         {
-            var material = DB.ProjectMaterialModels.FromSqlRaw<ProjectMaterialModel>
-                ($"EXEC dbo.usp_ProjectMaterialModel_DeletePath {PathOnServer}");
+            var material = DB.ProjectMaterialModels.FromSqlRaw($"EXEC dbo.usp_ProjectMaterialModel_Select_by_Project_Id {ProjectId} ").ToList();
             return material;
         }
     }

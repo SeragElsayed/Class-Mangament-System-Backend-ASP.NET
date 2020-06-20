@@ -16,33 +16,49 @@ using onlinelearningbackend.Repo.IManager;
 namespace onlinelearningbackend.Controllers
 {
     [ApiController]
+    [Authorize]
     public class ProjectMaterialController : ControllerBase
     {
         private IWebHostEnvironment hostingEnvironment;
 
         IProjectMaterialManager ProjectMaterialManager;
-        public ProjectMaterialController(IProjectMaterialManager _CMM, IWebHostEnvironment hostingEnvironment)
+        IUserProjectManager UserProjectManager;
+        public ProjectMaterialController(IUserProjectManager _userProjManag,IProjectMaterialManager _CMM, IWebHostEnvironment hostingEnvironment)
         {
             ProjectMaterialManager = _CMM;
             this.hostingEnvironment = hostingEnvironment;
+            UserProjectManager = _userProjManag;
 
         }
 
+        [HttpGet]
+        [Route("api/ProjectMaterial/All/{ProjectId}")]
+        public IActionResult GetProjectMaterialByProjectId(int ProjectId)
+        {
+            if (ProjectId < 1)
+                return BadRequest();
+            var material = ProjectMaterialManager.GetMaterialByProjectId(ProjectId);
+            return Ok(material);
+        }
+
         [HttpPost]
-        [Route("api/ProjectMaterial/Upload/{ProjectId}")]
+        [Route("api/ProjectMaterial/Upload/{ProjectId}/{Category}")]
         //////////////////////may cause error 
        // public async Task<IActionResult> AddProjectMaterial(int ProjectId, [FromForm(Name = "files")] List<IFormFile> files)
-        public async Task<IActionResult> AddProjectMaterial(int ProjectId)
+        public async Task<IActionResult> AddProjectMaterial(int ProjectId,string Category)
         {
             var files = new List<IFormFile>();
-            //var file = Request.Form.Files[0];
-            for (int i = 0; i < Request.Form.Files.Count(); i++)
+
+            for (int i = 0; i < Request.Form.Files?.Count(); i++)
             {
                 files.Add(Request.Form.Files[i]);
             }
-            long size = files.Sum(f => f.Length);
+
+
             var uploader = new Uploader(hostingEnvironment);
+
             var AllMaterial = new List<ProjectMaterialModel>();
+
             if (files.Count() == 0 || ProjectId <= 0)
                 return BadRequest();
             foreach (IFormFile source in files)
@@ -53,10 +69,13 @@ namespace onlinelearningbackend.Controllers
                 string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString().Trim('"');
 
                 filename = uploader.EnsureCorrectFilename(filename);
+
                 var PathToBeSavedInDB = uploader.GetPathAndFilename(filename);
+
                 using (FileStream output = System.IO.File.Create(PathToBeSavedInDB))
                     await source.CopyToAsync(output);
-                var cm = ProjectMaterialManager.AddMaterial(ProjectId, PathToBeSavedInDB).FirstOrDefault();
+
+                var cm = ProjectMaterialManager.AddMaterial(ProjectId, PathToBeSavedInDB,Category);
                 AllMaterial.Add(cm);
             }
             return Ok(AllMaterial);
@@ -72,6 +91,7 @@ namespace onlinelearningbackend.Controllers
                 {".jpg","image/jpeg" },
                 {".jpeg","image/jpeg" },
                 {".png","image/png" },
+                {".doc","application/msword" }
             };
         }
 
@@ -89,6 +109,60 @@ namespace onlinelearningbackend.Controllers
             memory.Position = 0;
             var ext = Path.GetExtension(_Path).ToLowerInvariant();
             return File(memory, GetMimeTypes()[ext], Path.GetFileName(_Path));
+        }
+
+        [HttpGet]
+        [Route("api/ProjectMaterial/Download/Id/{MaterialId}")]
+        public async Task<IActionResult> DownloadProjectMaterialByMatrialId(int MaterialId)
+        {
+            var material = ProjectMaterialManager.GetMaterialByMaterialId(MaterialId);
+            if (material == null)
+                return BadRequest();
+
+            var _Path = this.hostingEnvironment.WebRootPath + @"\uploads\" + material.PathOnServer;
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(_Path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            var ext = Path.GetExtension(_Path).ToLowerInvariant();
+           // return File(memory, GetMimeTypes()[ext], Path.GetFileName(_Path));
+            return File(memory, "*/*" );
+        }
+
+
+        [HttpDelete]
+        [Route("api/ProjectMaterial/DeleteById/{MaterialId}/{ProjectId}")]
+        public IActionResult DeleteByMaterialId(int MaterialId,int ProjectId)
+        {
+            string StudentId = User.Claims.First(c => c.Type == "UserId").Value;
+            var colab = UserProjectManager.GetUserProjectIdByStudentIdAndProjectId(StudentId, ProjectId);
+
+            if (MaterialId < 1 )
+                return BadRequest();
+
+            if (colab == null)
+                return Unauthorized();
+
+            var material = ProjectMaterialManager.GetMaterialByMaterialId(MaterialId);
+            if (material == null)
+                return BadRequest();
+
+            var _Path = this.hostingEnvironment.WebRootPath + @"\uploads\" + material.PathOnServer;
+
+            if (_Path == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+
+                System.IO.File.Delete(_Path);
+
+                ProjectMaterialManager.DeleteMaterialByMaterialId(MaterialId);
+                return Ok();
+            }
         }
 
 
