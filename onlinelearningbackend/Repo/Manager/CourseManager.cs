@@ -75,7 +75,7 @@ namespace onlinelearningbackend.DAL
         public void DeleteCoursesByCourseId(int CourseId)
         {
            // var x = DB.Database.ExecuteSqlRaw("select * from Courses");
-            var x = DB.Database.ExecuteSqlRaw($"EXEC dbo.usp_Courses_Delete {CourseId}");
+            var x = DB.Courses.FromSqlRaw($"EXEC dbo.usp_Courses_Delete {CourseId}");
         }
         public void EnrollStudentInCourse(int CourseId, string StudentId)
         {
