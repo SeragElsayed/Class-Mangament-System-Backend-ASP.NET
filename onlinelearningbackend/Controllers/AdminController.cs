@@ -50,5 +50,15 @@ namespace onlinelearningbackend.Controllers
                 return NotFound();
             return Ok(course);
         }
+
+        [HttpGet]
+        [Route("api/admin/Projects")]
+        public IActionResult GEtTotalProjects()
+        {
+            var project = admin.GetAllProjects();
+            if (project == null)
+                return NotFound();
+            return Ok(project);
+        }
     }
 }

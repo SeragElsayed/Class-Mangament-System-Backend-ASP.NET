@@ -8,11 +8,12 @@ namespace onlinelearningbackend.Repo.IManager
 {
    public interface IProjectMaterialManager
     {
-        IEnumerable<ProjectMaterialModel> AddMaterial(int courseId, string PathOnServer);
-        IEnumerable<ProjectMaterialModel> DeleteMaterialByMaterialId(int MaterialId);
-        IEnumerable<ProjectMaterialModel> DeleteMaterialByTrackId(int TrackId);
-        IEnumerable<ProjectMaterialModel> GetMaterialByTrackId(int TrackId);
-        IEnumerable<ProjectMaterialModel> GetMaterialById(int MaterialId);
-        IEnumerable<ProjectMaterialModel> DeleteMaterialByPath(string PathOnServer);
+        ProjectMaterialModel AddMaterial(int ProjectId, string PathOnServer,string Category);
+      
+        IEnumerable<ProjectMaterialModel> GetMaterialByProjectId(int ProjectId);
+        ProjectMaterialModel GetMaterialByMaterialId(int MaterialId);
+        ProjectMaterialModel DeleteMaterialByMaterialId(int MaterialId);
+
+        ProjectMaterialModel DeleteMaterialByPath(string PathOnServer);
     }
 }

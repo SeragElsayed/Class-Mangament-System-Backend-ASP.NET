@@ -19,6 +19,7 @@ namespace onlinelearningbackend.Repo.Manager
 
 
         public IEnumerable<ProjectModel> GetAllProjects()
+            
         {
             var projects = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModels_Select").ToList<ProjectModel>();
             return projects;
@@ -39,13 +40,14 @@ namespace onlinelearningbackend.Repo.Manager
             var projects = DB.ProjectModels.FromSqlRaw($"EXEC dbo.usp_ProjectModel_Select_By_Student_Id '{StudentId}';").ToList<ProjectModel>();
             return projects;
         }
-        public ProjectModel AddProjectByTrackId(ProjectModel NewProject,int TrackId,string StudentId)
+        public ProjectModel AddProjectByTrackId(ProjectModel NewProject,int TrackId,string StudentId,int IntakeId)
         {
-            var project = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Insert {0},{1},{2},{3}", 
+            var project = DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Insert {0},{1},{2},{3},{4}", 
                                                         NewProject.ProjectName,
                                                         NewProject.ProjectDescription,
                                                         TrackId,
-                                                        StudentId).ToList<ProjectModel>().FirstOrDefault();
+                                                        StudentId,
+                                                        IntakeId).ToList<ProjectModel>().FirstOrDefault();
             return project;
         }
         public ProjectModel EditProject(ProjectModel EditedProject)

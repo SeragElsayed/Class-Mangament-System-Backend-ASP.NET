@@ -11,7 +11,7 @@ using onlinelearningbackend.Models;
 
 namespace onlinelearningbackend.Controllers
 {
-    // [Authorize]
+     [Authorize]
     [ApiController]
     public class CourseController : ControllerBase
     {
@@ -24,14 +24,14 @@ namespace onlinelearningbackend.Controllers
 
         }
         // GET: api/Course
-        [HttpGet("{CourseId}")]
+        [HttpGet]
         [Route("api/Course/ByCourseId/{CourseId}")]
         public IActionResult GetByCourseId(int CourseId)
         {
 
-            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
+           // string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var c = _CourseManager.CoursesByCourseId(CourseId);
-            return Ok(new { c });
+            return Ok( c );
         }
         // GET: api/Course
         [HttpGet("{StudentId}")]
@@ -73,13 +73,13 @@ namespace onlinelearningbackend.Controllers
             if (ModelState.IsValid == false)
                 return BadRequest(new { message = "invalid Course info" });
 
-            //string UserId = User.Claims.First(c => c.Type == "UserId").Value;
-            // var instructor =await _userManager.FindByIdAsync(UserId);
-            // if (instructor == null)
-            //  return BadRequest();
-            //int TrackId = instructor.Track.TrackId;
+            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
+             var instructor =await _userManager.FindByIdAsync(UserId);
+             if (instructor == null)
+              return BadRequest();
+            int TrackId =(int) instructor.TrackId;
             /// using user manger to get user and track id
-            var c = _CourseManager.AddCourse(Course, "asd1", 3);
+            var c = _CourseManager.AddCourse(Course, UserId, TrackId);
             // var c = _CourseManager.AddCourse(Course);
 
             return Ok(new { c });
@@ -95,19 +95,34 @@ namespace onlinelearningbackend.Controllers
         }
 
 
-        [Route("api/Course/Edit/{CourseId}")]
+        [Route("api/Course/Edit")]
         // PUT: api/Course/5
-        [HttpPut("{CourseId}")]
-        public IActionResult PutEditCourse([FromBody] Course EditedCourse)
+        [HttpPut]
+        public async Task<IActionResult> PutEditCourse([FromBody] Course EditedCourse)
         {
-            var c = _CourseManager.EditCourse(EditedCourse);
-            return Ok(new { c });
+            if (ModelState.IsValid == false)
+                return BadRequest("invalid infor");
+            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
+            var instructor = await _userManager.FindByIdAsync(UserId);
+            if (instructor == null)
+                return BadRequest();
+            int TrackId = (int)instructor.TrackId;
+            var c = _CourseManager.EditCourse(EditedCourse, UserId, TrackId);
+
+            if (c == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(c);
+            }
         }
 
 
         [Route("api/Course/Delete/{CourseId}")]
         // PUT: api/Course/5
-        [HttpDelete("{CourseId}")]
+        [HttpDelete]
         public IActionResult DeleteCourse(int CourseId)
         {
             _CourseManager.DeleteCoursesByCourseId(CourseId);

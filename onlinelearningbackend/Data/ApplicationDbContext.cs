@@ -27,6 +27,8 @@ namespace onlinelearningbackend.Data
         public virtual DbSet<ProjectMaterialModel> ProjectMaterialModels { get; set; }
         public virtual DbSet<UserProjectModel> UserProjectModels { get; set; }
         public virtual DbSet<Topic> Topics { get; set; }
+        public virtual DbSet<Intake> Intakes { get; set; }
+
 
 
     }

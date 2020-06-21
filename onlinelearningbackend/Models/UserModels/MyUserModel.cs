@@ -18,7 +18,8 @@ namespace onlinelearningbackend.Models
         }
 
         public string PrifleImageUrl { get; set; }
-
+        public int? IntakeId { get; set; }
+        public Intake Intake { get; set; }
         public string City { get; set; }
         public bool IsActive { get; set; } = true;
 

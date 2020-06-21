@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 //using System.Web.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using onlinelearningbackend.Models;
 using onlinelearningbackend.Repo.IManager;
@@ -16,9 +17,11 @@ namespace onlinelearningbackend.Controllers
     public class ProjectController : ControllerBase
     {
         IProjectManager ProjectManager;
-        public ProjectController(IProjectManager _PM)
+        private readonly UserManager<MyUserModel> _userManager;
+        public ProjectController(IProjectManager _PM, UserManager<MyUserModel> userManager)
         {
             ProjectManager = _PM;
+            _userManager = userManager;
         }
 
 
@@ -105,17 +108,21 @@ namespace onlinelearningbackend.Controllers
         }
         //ProjectModel AddProject(ProjectModel NewProject, int TrackId);
         [HttpPost]
-        [Route("api/Project/Add/{TrackId}")]
+        [Route("api/Project/Add/{TrackId}/{IntakeId}")]
         [System.Web.Http.Authorize]
 
-        public IActionResult PostAddProjectByTrackId([FromBody]ProjectModel NewProject,[FromRoute]int TrackId)
+        public async  Task<IActionResult> PostAddProjectByTrackId([FromBody]ProjectModel NewProject,[FromRoute]int TrackId, [FromRoute]int IntakeId)
         {
             if (ModelState.IsValid == false || TrackId < 1)
                 return BadRequest();
 
             string StudentId = User.Claims.First(c => c.Type == "UserId").Value;
 
-            var Project = ProjectManager.AddProjectByTrackId(NewProject,TrackId,StudentId);
+            var user = await _userManager.FindByIdAsync(StudentId);
+            if (user == null)
+                return BadRequest();
+
+            var Project = ProjectManager.AddProjectByTrackId(NewProject,TrackId,StudentId,IntakeId);
 
             if (Project == null)
             {

@@ -18,6 +18,7 @@ using onlinelearningbackend.Helpers;
 using onlinelearningbackend.Repo.IManager;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.CodeAnalysis.Differencing;
+using onlinelearningbackend.Repo.Manager;
 
 namespace onlinelearningbackend.Controllers
 {
@@ -28,17 +29,17 @@ namespace onlinelearningbackend.Controllers
        
         private readonly UserManager<MyUserModel> _userManager;
         private readonly RoleManager<MyRoleModel> _roleManager;
-        //IStudentManager db;
+        IIntakeManager db;
         private readonly ApplicationSetting _AppSetting;
 
         public UserController(
-            //IStudentManager _db,
-            UserManager<MyUserModel> userManager,
+              IIntakeManager _db,
+        UserManager<MyUserModel> userManager,
             SignInManager<MyUserModel> signInManager,
             RoleManager<MyRoleModel> roleManager,
             IOptions<ApplicationSetting> AppSetting)
         {
-            //this.db = _db;
+            this.db = _db;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
@@ -54,15 +55,27 @@ namespace onlinelearningbackend.Controllers
         {
 
             //to create role
-           // MyRoleModel iden = new MyRoleModel
+            // MyRoleModel iden = new MyRoleModel
             //{
-              //  Name = "Student"
+            //  Name = "Student"
             //};
 
 
-//            IdentityResult res = await _roleManager.CreateAsync(iden);
+            //            IdentityResult res = await _roleManager.CreateAsync(iden);
             ////////////////////
+            //to get the intake for the user 
+            //var intake = NewUser.IntakeId; 
 
+
+            ///////////////////////////
+            //to get the intakeid
+            int intakename=NewUser.IntakeId.GetValueOrDefault();
+            var intake = db.GetIntakeByName(intakename);
+            if (intake == null)
+                return NotFound();
+            NewUser.IntakeId = intake.IntakeId;
+
+            /////////////////
             var file = Request?.Form?.Files?.FirstOrDefault();
             bool IsInfoValid = ModelState.IsValid;
             bool IsImageUploaded = file?.Length > 0;
@@ -73,7 +86,12 @@ namespace onlinelearningbackend.Controllers
             }
             if (  IsImageUploaded==  false)
                 {
-                    var user = await _userManager.CreateAsync(NewUser, NewUser.Password);
+                //if user exists
+                var checkuser = await _userManager.FindByNameAsync(NewUser.UserName);
+                if (checkuser != null)
+                    return StatusCode(409, $"User '{NewUser.UserName}' already exists.");
+                ///////////
+                var user = await _userManager.CreateAsync(NewUser, NewUser.Password);
                 // to assign role to user 
                 var userdata = await _userManager.FindByNameAsync(NewUser.UserName);
                 await _userManager.AddToRoleAsync(userdata, "Student");
@@ -104,7 +122,11 @@ namespace onlinelearningbackend.Controllers
             var dbImagePath = FSHelpers.SaveProfileImage(NewUser, uploadedfilename, file);
             
             NewUser.PrifleImageUrl = dbImagePath;
-
+            //if user exists
+            var checkuser2 = await _userManager.FindByNameAsync(NewUser.UserName);
+            if (checkuser2 != null)
+                return StatusCode(409, $"User '{NewUser.UserName}' already exists.");
+            ///////////
             var result = await _userManager.CreateAsync(NewUser, NewUser.Password);
             // to assign role to user 
             var u = await _userManager.FindByNameAsync(NewUser.UserName);
@@ -142,6 +164,10 @@ namespace onlinelearningbackend.Controllers
             }
             var key = Encoding.UTF8.GetBytes(_AppSetting.JWT_Secret);
             var User = await _userManager.FindByNameAsync(model.UserName);
+            if(User==null)
+            {
+                return NotFound();
+            }
             if (User.IsActive == false) {
                 return NotFound();
             }
