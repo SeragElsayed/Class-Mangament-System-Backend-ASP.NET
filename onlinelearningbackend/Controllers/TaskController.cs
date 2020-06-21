@@ -57,7 +57,7 @@ namespace onlinelearningbackend.Controllers
 
         }
         [HttpGet]
-        [Route("api/course/tasks/{CourseId}")]
+        [Route("api/course/tasks/all/{CourseId}")]
         public IActionResult GetTaskByCourseId(int CourseId)
         {
             var tasks = taskClass.GetTaskByCourseId(CourseId);
