@@ -164,6 +164,10 @@ namespace onlinelearningbackend.Controllers
             }
             var key = Encoding.UTF8.GetBytes(_AppSetting.JWT_Secret);
             var User = await _userManager.FindByNameAsync(model.UserName);
+            if(User==null)
+            {
+                return NotFound();
+            }
             if (User.IsActive == false) {
                 return NotFound();
             }
