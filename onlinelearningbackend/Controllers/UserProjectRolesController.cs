@@ -63,6 +63,39 @@ namespace onlinelearningbackend.Controllers
         }
 
 
+        [HttpGet]
+        [Route("api/Collaborator/{ProjectId}")]
+
+        public async Task<IActionResult> GetCollaboratorByProjectId(int ProjectId)
+        {
+            var userProjectList = UserProjectManager.GetCollaboratorIdByProjectId(ProjectId);
+
+            if (userProjectList.Count() == 0)
+                return Ok();
+
+           
+            List<Object> Collaborators = new List<Object>();
+
+            foreach (var item in userProjectList)
+            {
+                var user = await _userManager.FindByIdAsync(item?.MyUserModelId);
+                
+                var UserProject = UserProjectManager.GetUserProjectIdByStudentIdAndProjectId(item?.MyUserModelId, ProjectId);
+                Collaborators.Add(new { user, UserProject });
+            }
+
+            if (Collaborators == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(Collaborators);
+            }
+
+        }
+
+
         //public void AddCollaboratorByUserId(string UserId, int ProjectId);
 
         [HttpPost]
