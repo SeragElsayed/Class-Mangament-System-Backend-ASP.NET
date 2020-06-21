@@ -13,7 +13,7 @@ namespace onlinelearningbackend.Manager
         IEnumerable<TaskClass> AddTask(int CourseId, TaskClass NewTask);
         IEnumerable<TaskClass> EditTask(TaskClass EditedTask);
         //void
-        IEnumerable<TaskClass> DeleteTaskByTaskId(int TaskId);
+        int DeleteTaskByTaskId(int TaskId);
 
     }
 }

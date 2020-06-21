@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace onlinelearningbackend.Controllers
 {
-    [Authorize]
+   
     [ApiController]
     public class TaskController: ControllerBase
     {
@@ -19,11 +19,14 @@ namespace onlinelearningbackend.Controllers
         {
             this.taskClass = _taskClass;     
         }
+
+       // [Authorize(Roles = "Instructor")]
         [HttpPost]
         [Route("api/course/AddTask/{CourseId}")]
         //////////////////////may cause error 
         public IActionResult AddTaskByCourseId(int CourseId, TaskClass newTask)
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("enter the whole data please");
@@ -50,10 +53,11 @@ namespace onlinelearningbackend.Controllers
         [Route("api/course/deletetask/{taskId}")]
         public IActionResult DeleteTaskByTaskId(int taskId)
         {
-            taskClass.DeleteTaskByTaskId(taskId);
+            if (taskId < 1)
+                return BadRequest();
 
-
-            return Ok();
+           var IsSuccessfull= taskClass.DeleteTaskByTaskId(taskId);
+            return Ok(IsSuccessfull);
 
         }
         [HttpGet]
