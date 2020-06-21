@@ -95,13 +95,28 @@ namespace onlinelearningbackend.Controllers
         }
 
 
-        [Route("api/Course/Edit/{CourseId}")]
+        [Route("api/Course/Edit")]
         // PUT: api/Course/5
-        [HttpPut("{CourseId}")]
-        public IActionResult PutEditCourse([FromBody] Course EditedCourse)
+        [HttpPut]
+        public async Task<IActionResult> PutEditCourse([FromBody] Course EditedCourse)
         {
-            var c = _CourseManager.EditCourse(EditedCourse);
-            return Ok(new { c });
+            if (ModelState.IsValid == false)
+                return BadRequest("invalid infor");
+            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
+            var instructor = await _userManager.FindByIdAsync(UserId);
+            if (instructor == null)
+                return BadRequest();
+            int TrackId = (int)instructor.TrackId;
+            var c = _CourseManager.EditCourse(EditedCourse, UserId, TrackId);
+
+            if (c == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(c);
+            }
         }
 
 

@@ -43,8 +43,6 @@ namespace onlinelearningbackend.DAL
         }
         //public Course AddCourse(Course NewCourse, string InstructorId)
         public IEnumerable<Course> AddCourse(Course NewCourse, string InstructorId, int TrackId)
-
-
         {
             var course = DB.Courses.FromSqlRaw("EXEC dbo.usp_Courses_Insert {0},{1},{2},{3},{4},{5}"
                                                 , NewCourse.CourseName,
@@ -58,19 +56,19 @@ namespace onlinelearningbackend.DAL
                                                 );
             return course;
         }
-        public Course EditCourse(Course EditedCourse)
+        public IEnumerable<Course> EditCourse(Course EditedCourse, string InstructorId, int TrackId)
         {
             var Course = DB.Courses.FromSqlRaw("EXEC dbo.usp_Courses_Update {0},{1},{2},{3},{4},{5},{6}",
                                                 EditedCourse.CourseId,
                                                 EditedCourse.CourseName,
                                                 EditedCourse.Description,
                                                 EditedCourse.IntervalInDays,
-                                                //EditedCourse.StartingDate,
+                                                //NewCourse.StartingDate,
                                                 EditedCourse.EnrollmentKey,
-                                                EditedCourse.Topic.TopicId,
-                                                EditedCourse.Track.TrackId
-                                                )
-                                            .ToList<Course>().FirstOrDefault();
+                                                //NewCourse.Topic,//.TopicId,
+                                                TrackId,
+                                                InstructorId
+                                                );
             return Course;
         }
 
