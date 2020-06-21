@@ -29,15 +29,15 @@ namespace onlinelearningbackend.Manager
             
         }
 
-        public IEnumerable<TaskClass> DeleteTaskByTaskId(int TaskId)
+        public int DeleteTaskByTaskId(int TaskId)
         {
-            var Tasks = DB.Tasks.FromSqlRaw("EXEC dbo.usp_Tasks_Delete {0}", TaskId).ToList<TaskClass>();
-            return Tasks;
+            var Tasks = DB.Database.ExecuteSqlCommand("EXEC dbo.usp_Tasks_Delete {0}", TaskId);
+            return 1;
         }
 
         public IEnumerable<TaskClass> EditTask(TaskClass EditedTask)
         {
-            var Tasks = DB.Tasks.FromSqlRaw("EXEC dbo.usp_Tasks_Update {0},{1},{2}"
+            var Tasks = DB.Tasks.FromSqlRaw("EXEC dbo.usp_Tasks_Update {0},{1},{2},{3}"
                                            , EditedTask.TaskId
                                            , EditedTask.TaskName
                                            , EditedTask.Description
@@ -49,7 +49,7 @@ namespace onlinelearningbackend.Manager
 
         public IEnumerable<TaskClass> GetTaskByCourseId(int CourseId)
         {
-            var Tasks = DB.Tasks.FromSqlRaw("EXEC dbo.usp_TasksByCourseId_Select {0}", CourseId).ToList<TaskClass>();
+            var Tasks = DB.Tasks.FromSqlRaw("EXEC dbo.usp_Tasks_Select_By_Course_Id {0}", CourseId).ToList<TaskClass>();
             return Tasks;
         }
 

@@ -119,7 +119,7 @@ namespace onlinelearningbackend.Controllers
             if (material == null)
                 return BadRequest();//D:\tttttttttt\backend latest\onlinelearningbackend\aspAPIday2Task.txt
 
-           // var _Path = this.hostingEnvironment.WebRootPath+"\\" + material.PathOnServer;
+            // var _Path = this.hostingEnvironment.WebRootPath+"\\" + material.PathOnServer;
             var _Path = "D:\\tttttttttt\\backend latest\\onlinelearningbackend\\" + material.PathOnServer;
             //var memory = new MemoryStream(); 
             var DoesFileExists = System.IO.File.Exists(_Path);
@@ -129,11 +129,11 @@ namespace onlinelearningbackend.Controllers
             //    await stream.CopyToAsync(memory);
             //}
             byte[] fileBytes = System.IO.File.ReadAllBytes(_Path).ToArray();
-           // memory.Position = 0;
-           // var ext = Path.GetExtension(_Path).ToLowerInvariant();
-           // return File(memory, GetMimeTypes()[ext], Path.GetFileName(_Path));
-            var f=File(fileBytes, "application/octet-stream",material.PathOnServer);
-            return Ok(new { file=f, fileName=material.PathOnServer });
+            // memory.Position = 0;
+            // var ext = Path.GetExtension(_Path).ToLowerInvariant();
+            // return File(memory, GetMimeTypes()[ext], Path.GetFileName(_Path));
+            var f = File(fileBytes, "application/octet-stream", material.PathOnServer);
+            return Ok(new { file = f, fileName = material.PathOnServer });
         }
 
 
