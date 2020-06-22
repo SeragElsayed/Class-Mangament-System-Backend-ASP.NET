@@ -25,13 +25,14 @@ namespace onlinelearningbackend.Helpers
 
         public string GetPathAndFilename(string filename)
         {
+            var UniqueFileName = new Guid();
             string path = this.hostingEnvironment.WebRootPath + @"\uploads\";
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-           // return path + filename;
-            return   filename;
+            return path +UniqueFileName+ filename;
+           // return   filename;
             //~/root/upload/filename.ext
         }
     }

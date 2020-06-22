@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Results;
 using Magnum.FileSystem;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
@@ -18,16 +19,19 @@ using onlinelearningbackend.Models;
 
 namespace onlinelearningbackend.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class TaskSolutionController : ControllerBase
     {
-       // ITaskSolutionManager db;
-         ITaskSolutionManager TaskSolutionManager;
-        public TaskSolutionController(ITaskSolutionManager _TSM)
+        // ITaskSolutionManager db;
+        private IWebHostEnvironment hostingEnvironment;
+        ITaskSolutionManager TaskSolutionManager;
+        public TaskSolutionController(ITaskSolutionManager _TSM, IWebHostEnvironment hostingEnvironment)
         {
             this.TaskSolutionManager = _TSM;
+            this.hostingEnvironment = hostingEnvironment;
         }
+
         [HttpGet]
         [Route("api/course/tasksStd/{tasksolutionId}")]
         public IActionResult GetTaskSolutionById(int TaskSolutionId)
@@ -41,139 +45,109 @@ namespace onlinelearningbackend.Controllers
         }
 
 
-        //[HttpPost]
-        //[Route("api/course/tasksStd/{StudentId}/{TaskId}/{CourseId}")]
-        /////////////////////////not sure of the route
-        //public IActionResult AddTaskSolutionByStudent(int TaskId, int CourseId, TaskSolution newTaskSolution,string StudentId,[FromForm]Microsoft.AspNetCore.Http.IFormFile Files)
-        //{
-        //    var file = Request.Form.Files[0];
-        //    //bool IsInfoValid = ModelState.IsValid;
-        //    bool IsFileUploaded = file.Length > 0;
-
-        //    // string StudentID = User.Claims.First(c => c.Type == "UserId").Value;
-        //    bool IsInfoValid = TaskId > 0 && CourseId > 0;// && StudentID !=null  ;
-
-        //    if(IsInfoValid== false || IsFileUploaded == false)
-        //    {
-        //        return BadRequest(new { message = "Info is not valid " });
-        //    }
-        //    //check if file extensipon allowed
-        //    var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-
-        //    var IsFileExtAllowed = FSHelpers.IsFileAllowed(uploadedfilename);
-        //    if (IsFileExtAllowed == false)
-        //    {
-        //        return BadRequest(new { message = "file extensions allowed are rar and zip only " });
-
-        //    }
-        //    //save the file on the server 
-        //    //return path of the saved file
-        //    var DBFileUrl = FSHelpers.SaveTaskSolutionFile(uploadedfilename, file);
-        //    // newtask.TaskSolutionURL=returned file path
-        //    newTaskSolution.TaskSolutionURL = DBFileUrl;
-        //   // var TaskSolution =  TaskSolutionManager.AddTaskByStudent(StudentID,TaskId, CourseId, newTaskSolution);
-        //    var TaskSolution =  TaskSolutionManager.AddTaskByStudent(StudentId,TaskId, CourseId, newTaskSolution);
-
-        //    if (TaskSolution == null)
-        //    {
-        //        return NotFound();
-
-        //    }
-        //    return Ok(TaskSolution);
-        //    }
-        ///////
-        [HttpPost]
-        [Route("api/course/tasksStd/{StudentId}/{TaskId}/{CourseId}")]
-        ///////////////////////not sure of the route
-        public IActionResult AddTaskSolutionByStudent(string StudentId, int TaskId, int CourseId, List<IFormFile> Files)
-        {
-            var file = Files[0];
-            //bool IsInfoValid = ModelState.IsValid;
-            bool IsFileUploaded = file.Length > 0;
-
-            //string StudentID = User.Claims.First(c => c.Type == "UserId").Value;
-            string StudentID = StudentId;
-
-            bool IsInfoValid = TaskId > 0 && CourseId > 0 && StudentID != null;
-
-            if (IsInfoValid == false || IsFileUploaded == false)
-            {
-                return BadRequest(new { message = "Info is not valid " });
-            }
-            //check if file extensipon allowed
-            var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-
-            var IsFileExtAllowed = FSHelpers.IsFileAllowed(uploadedfilename);
-            if (IsFileExtAllowed == false)
-            {
-                return BadRequest(new { message = "file extensions allowed are rar and zip only " });
-
-            }
-            //save the file on the server 
-            //return path of the saved file
-            var DBFileUrl = FSHelpers.SaveTaskSolutionFile(uploadedfilename, file);
-            // newtask.TaskSolutionURL=returned file path
-            var newTaskSolution = new TaskSolution() { TaskSolutionURL = DBFileUrl };
-            //newTaskSolution.TaskSolutionURL = DBFileUrl;
-            var TaskSolution = TaskSolutionManager.AddTaskByStudent(StudentID, TaskId, CourseId, newTaskSolution);
-
-            if (TaskSolution == null)
-            {
-                return NotFound();
-
-            }
-            return Ok(TaskSolution);
-        }
-
-
         [HttpGet]
-        [Route("api/course/tasksStd/{StudentId}/{TaskId}/{CourseId}")]
-        public IActionResult EditTaskSolutionByStudent( TaskSolution newTaskSolution )
+        [Route("api/course/TaskSolution/{TaskId}")]
+        public IActionResult GetTaskSolutionByTaskId(int TaskId)
         {
-            var file = Request.Form.Files[0];
+            if (TaskId < 1)
+                return BadRequest();
 
-            bool IsFileUploaded = file.Length > 0;
+            var StudentId = User.Claims.First(c => c.Type == "UserId").Value;
+            var taskSolutions = TaskSolutionManager.GetTaskSolutionByStudentId(StudentId, TaskId);
 
-            string StudentID = User.Claims.First(c => c.Type == "UserId").Value;
 
-            if ( IsFileUploaded == false)
+            return Ok(taskSolutions);
+        }
+            ///////
+            ///
+            [HttpPost]
+        [Route("api/course/tasksStd/{TaskId}/{CourseId}")]
+        ///////////////////////not sure of the route
+        public async Task<IActionResult> AddTaskSolutionByStudent( int TaskId, int CourseId)
+        {
+            if (Request.Form.Files.Count() < 1 || TaskId <1 || CourseId <1 )
+                return BadRequest();
+
+            var files = new List<IFormFile>();
+
+            for (int i = 0; i < Request.Form.Files?.Count(); i++)
             {
-                return BadRequest(new { message = "Info is not valid " });
-            }
-            //check if file extensipon allowed
-            var uploadedfilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-
-            var IsFileExtAllowed = FSHelpers.IsFileAllowed(uploadedfilename);
-            if (IsFileExtAllowed == false)
-            {
-                return BadRequest(new { message = "file extensions allowed are rar and zip only " });
-
-            }
-            
-            var DBFileUrl = FSHelpers.SaveTaskSolutionFile(uploadedfilename, file);
-
-            newTaskSolution.TaskSolutionURL = DBFileUrl;
-            var OldPathFile = newTaskSolution.TaskSolutionURL;
-            var TaskSolution = TaskSolutionManager.EditTaskSolution(StudentID, newTaskSolution);
-
-            if (TaskSolution == null)
-            {
-                return NotFound();
-
+                files.Add(Request.Form.Files[i]);
             }
 
-            FSHelpers.DeleteOldTaskSolutionFile(OldPathFile);
+            var uploader = new Uploader(hostingEnvironment);
 
-            return Ok(TaskSolution);
+            var AllMaterial = new List<TaskSolution>();
+
+            var StudentId = User.Claims.First(c => c.Type == "UserId").Value;
+            var NewTaskSolution = new TaskSolution();
+            NewTaskSolution.MyUserModelId = StudentId;
+
+
+            foreach (IFormFile source in files)
+            {
+                if (source.Length == 0)
+                    continue;
+
+                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString().Trim('"');
+
+                filename = uploader.EnsureCorrectFilename(filename);
+
+                var PathToBeSavedInDB = uploader.GetPathAndFilename(filename);
+
+
+
+                using (FileStream output = System.IO.File.Create(PathToBeSavedInDB))
+                    await source.CopyToAsync(output);
+                NewTaskSolution.TaskId = TaskId;
+                NewTaskSolution.CourseId = CourseId;
+                NewTaskSolution.FileName = filename;
+                NewTaskSolution.TaskSolutionURL = PathToBeSavedInDB;
+                
+
+                var cm = TaskSolutionManager.AddTaskByStudent(NewTaskSolution);
+                AllMaterial.Add(cm);
+            }
+            return Ok(AllMaterial);
         }
 
 
-        [Route("api/course/tasksStd/{TaskSolutionId}")]
-        [HttpDelete("{TaskSolutionId}")]
+
+        [Route("api/course/TaskSolution/{TaskSolutionId}")]
+        [HttpDelete]
         public IActionResult DeleteTaskSolutionByTaskId(int TaskSolutionId)
         {
+
+            string StudentId = User.Claims.First(c => c.Type == "UserId").Value;
+
+            if (TaskSolutionId < 1)
+                return BadRequest();
+
+            var taskSolution = TaskSolutionManager.GetTaskSolutionById(TaskSolutionId);
+            if (taskSolution == null)
+                return BadRequest();
+
+            if (taskSolution.MyUserModelId != StudentId)
+                return Unauthorized();
+
+
+            var _Path = taskSolution.TaskSolutionURL;
+
+            var DoesFileExists = System.IO.File.Exists(_Path);
+
+            if (DoesFileExists == false)
+            {
+                return NotFound();
+            }
+            else
+            {
+
+                System.IO.File.Delete(_Path);
+
             TaskSolutionManager.DeleteTaskSolutionByTaskId(TaskSolutionId);
-            return Ok();
+                return Ok();
+            }
+
         }
 
 
