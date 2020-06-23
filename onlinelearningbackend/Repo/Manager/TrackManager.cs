@@ -21,9 +21,9 @@ namespace onlinelearningbackend.Repo.Manager
             var tracks = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Select ").ToList<Track>();
             return tracks;
         }
-        public Track GetTrackByTrackId(int trackId)
+        public List<Track> GetTrackByTrackId(int trackId)
         {
-            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Track_Track_Id {trackId}").ToList<Track>().FirstOrDefault();
+            var track = db.Tracks.FromSqlRaw<Track>($"EXEC usp_Tracks_BrId {trackId}").ToList<Track>();
             return track;
         }
         public Track EditTrack(Track EditedTrack)
