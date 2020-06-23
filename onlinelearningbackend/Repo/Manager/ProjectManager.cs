@@ -60,7 +60,7 @@ namespace onlinelearningbackend.Repo.Manager
         }
         public void DeleteProject(int ProjectId)
         {
-            DB.ProjectModels.FromSqlRaw("EXEC dbo.usp_ProjectModel_Delete {0}",ProjectId);
+            var x = DB.Database.ExecuteSqlRaw("EXEC dbo.usp_ProjectModels_Delete {0}", ProjectId);
             
         }
     }

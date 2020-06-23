@@ -8,7 +8,7 @@ namespace onlinelearningbackend.Repo.IManager
 {
    public interface IProjectMaterialManager
     {
-        ProjectMaterialModel AddMaterial(int ProjectId, string PathOnServer,string Category);
+        ProjectMaterialModel AddMaterial(int ProjectId, string PathOnServer,string Category,string filename);
       
         IEnumerable<ProjectMaterialModel> GetMaterialByProjectId(int ProjectId);
         ProjectMaterialModel GetMaterialByMaterialId(int MaterialId);

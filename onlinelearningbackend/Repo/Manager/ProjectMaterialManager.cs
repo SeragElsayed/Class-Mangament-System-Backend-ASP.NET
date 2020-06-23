@@ -17,9 +17,9 @@ namespace onlinelearningbackend.Repo.Manager
             DB = _DB;
         }
 
-        public ProjectMaterialModel AddMaterial(int ProjectId, string PathOnServer, string Category)
+        public ProjectMaterialModel AddMaterial(int ProjectId, string PathOnServer, string Category,string filename)
         {
-            var material = DB.ProjectMaterialModels.FromSqlRaw($"EXEC dbo.usp_ProjectMaterialModel_Insert '{PathOnServer}', {ProjectId},'{Category}'").ToList().FirstOrDefault();
+            var material = DB.ProjectMaterialModels.FromSqlRaw($"EXEC dbo.usp_ProjectMaterialModel_Insert '{PathOnServer}', {ProjectId},'{Category}','{filename}'").ToList().FirstOrDefault();
             return material;
         }
 

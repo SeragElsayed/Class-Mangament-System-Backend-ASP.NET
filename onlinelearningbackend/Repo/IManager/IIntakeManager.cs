@@ -10,6 +10,7 @@ namespace onlinelearningbackend.Repo.IManager
     {
         List<Intake> GetAllIntakes();
         Intake GetIntakeByName(int IntakeName);
+        Intake GetIntakeById(int IntakeId);
         Intake AddIntake(Intake NewIntake);
         Intake EditIntakeById(Intake EditedIntake);
         Intake DeleteIntakeById(int IntakeId);
