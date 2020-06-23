@@ -75,7 +75,7 @@ namespace onlinelearningbackend.Controllers
                 using (FileStream output = System.IO.File.Create(PathToBeSavedInDB))
                     await source.CopyToAsync(output);
 
-                var cm = ProjectMaterialManager.AddMaterial(ProjectId, PathToBeSavedInDB,Category);
+                var cm = ProjectMaterialManager.AddMaterial(ProjectId, PathToBeSavedInDB,Category,filename);
                 AllMaterial.Add(cm);
             }
             return Ok(AllMaterial);
@@ -154,7 +154,7 @@ namespace onlinelearningbackend.Controllers
             if (material == null)
                 return BadRequest();
 
-            var _Path = this.hostingEnvironment.WebRootPath + @"\uploads\" + material.PathOnServer;
+            var _Path = material.PathOnServer;
 
             if (_Path == null)
             {
