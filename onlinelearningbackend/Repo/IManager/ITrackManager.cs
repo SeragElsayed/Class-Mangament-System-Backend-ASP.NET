@@ -10,7 +10,7 @@ namespace onlinelearningbackend.Repo.IManager
     {
         Track GetAllTracksByTrackId(int TrackId);
         List<Track> GetAllTracks();
-        Track GetTrackByTrackId(int trackId);
+        List<Track> GetTrackByTrackId(int trackId);
         Track AddTrack(Track NewTrack);
         Track EditTrack(Track EditedTrack);
         Track DeleteTrackById(int TrackId);
