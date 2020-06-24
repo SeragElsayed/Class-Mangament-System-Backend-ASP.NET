@@ -41,17 +41,32 @@ namespace onlinelearningbackend.Controllers
 
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var c = _CourseManager.CoursesByStudentId(StudentId);
+
             return Ok(new { c });
         }
         // GET: api/Course
-        [HttpGet("{InstructorId}")]
-        [Route("api/Course/ByInstructorId/{InstructorId}")]
-        public IActionResult GetByInstructorId(string InstructorId)
+        [HttpGet]
+        [Route("api/Course/ByInstructorId")]
+        public IActionResult GetByInstructorId()
         {
-
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
-            var c = _CourseManager.CoursesByInstructorId(InstructorId);
-            return Ok(new { c });
+            var c = _CourseManager.GetAllCourses();
+            var courses = new List<object>();
+            foreach (var item in c)
+            {
+                var courseuser = _CourseManager.IsUserEnrolled(item.CourseId, UserId);
+                if (courseuser == null)
+                {
+                    continue;
+                 }
+                else
+                {
+                    courses.Add(new { item.CourseId, item.CourseMaterialModels, item.CourseMyUserModels, item.CourseName, item.Description, item.EnrollmentKey, IsEnrolled = true });
+
+                }
+
+            }
+            return Ok(courses);
         }
         // GET: api/Course
         [HttpGet("{TrackId}")]
@@ -89,9 +104,24 @@ namespace onlinelearningbackend.Controllers
         [Route("api/Course/GetExploreCourses")]
         public IActionResult GetAllExploreCourses()
         {
-
+            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var c = _CourseManager.GetAllCourses();
-            return Ok(c);
+            var courses = new List<object>();
+            foreach (var item in c)
+            {
+                var courseuser = _CourseManager.IsUserEnrolled(item.CourseId, UserId);
+                if (courseuser == null)
+                {
+                    courses.Add(new { item.CourseId,item.CourseMaterialModels,item.CourseMyUserModels,item.CourseName,item.Description,item.EnrollmentKey,IsEnrolled=false });
+                }
+                else
+                {
+                    courses.Add(new { item.CourseId, item.CourseMaterialModels, item.CourseMyUserModels, item.CourseName, item.Description, item.EnrollmentKey, IsEnrolled = true });
+
+                }
+
+            }
+            return Ok(courses);
         }
 
 
@@ -143,12 +173,12 @@ namespace onlinelearningbackend.Controllers
             var course = _CourseManager.CoursesByCourseId(CourseId);
 
             if (course.EnrollmentKey != EnrollmentKey)
-                return Unauthorized();
-            
+                return Ok(new { res = "wrong key" });
+
 
             _CourseManager.EnrollStudentInCourse(CourseId, UserId);
-            string res = "enrolled";
-            return Ok(res);
+          
+            return Ok(new { res="enrolled"});
         }
     }
 }
