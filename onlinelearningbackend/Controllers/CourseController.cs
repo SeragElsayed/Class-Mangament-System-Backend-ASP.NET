@@ -86,8 +86,8 @@ namespace onlinelearningbackend.Controllers
         }
 
         [HttpGet]
-        [Route("api/Course/GetCourses")]
-        public IActionResult GetAllCourses()
+        [Route("api/Course/GetExploreCourses")]
+        public IActionResult GetAllExploreCourses()
         {
 
             var c = _CourseManager.GetAllCourses();
