@@ -16,54 +16,33 @@ namespace onlinelearningbackend.Repo.Manager
         {
             DB = _DB;
         }
-        ///add material 
-        public IEnumerable<CourseMaterialModel> AddMaterial(int courseId, string PathOnServer)
+
+        public CourseMaterialModel AddMaterial(int CourseId, string PathOnServer, string Category, string filename)
         {
-            var material = DB.CourseMaterialModels.FromSqlRaw<CourseMaterialModel>
-                ($"EXEC dbo.usp_CourseMaterialModel_Insert '{PathOnServer}',{courseId}");
+            var material = DB.CourseMaterialModels.FromSqlRaw($"EXEC dbo.usp_CourseMaterialModel_Insert '{PathOnServer}', {CourseId},'{Category}','{filename}'").ToList().FirstOrDefault();
             return material;
         }
 
-        ///delete material by material id
-
-        public IEnumerable<CourseMaterialModel> DeleteMaterialByMaterialId(int MaterialId)
+        public CourseMaterialModel DeleteMaterialByMaterialId(int MaterialId)
         {
-            var material = DB.CourseMaterialModels.FromSqlRaw<CourseMaterialModel>
-                ($"EXEC dbo.usp_CourseMaterialModel_DeleteById {MaterialId}");
-            return material;
-        }
-        ///delete material by course id
-        public IEnumerable<CourseMaterialModel> DeleteMaterialByCourseId(int courseId)
-        {
-            var material = DB.CourseMaterialModels.FromSqlRaw<CourseMaterialModel>
-                ($"EXEC dbo.usp_CourseMaterialModel_DeleteByCourseId {courseId}");
+            var material = DB.CourseMaterialModels.FromSqlRaw($"EXEC dbo.usp_CourseMaterialModel_Delete_by_Material_Id {MaterialId} ").ToList().FirstOrDefault();
             return material;
         }
 
+        public CourseMaterialModel DeleteMaterialByPath(string PathOnServer)
+        {
+            throw new NotImplementedException();
+        }
 
-
-        /// get material by course id 
+        public CourseMaterialModel GetMaterialByMaterialId(int MaterialId)
+        {
+            var material = DB.CourseMaterialModels.FromSqlRaw($"EXEC dbo.usp_CourseMaterialModel_Select_by_material_Id {MaterialId} ").ToList().FirstOrDefault();
+            return material;
+        }
 
         public IEnumerable<CourseMaterialModel> GetMaterialByCourseId(int CourseId)
         {
-            var material = DB.CourseMaterialModels.FromSqlRaw<CourseMaterialModel>
-                ($"EXEC dbo.usp_CourseMaterialModel_SelectByCourseId {CourseId}");
-            return material;
-        }
-        /// get material by material id 
-        /// not important
-        public IEnumerable<CourseMaterialModel> GetMaterialById(int materialId)
-        {
-            var material = DB.CourseMaterialModels.FromSqlRaw<CourseMaterialModel>
-                ($"EXEC dbo.usp_CourseMaterialModel_Select {materialId}");
-            return material;
-        }
-
-
-        public IEnumerable<CourseMaterialModel> DeleteMaterialByPath(string PathOnServer)
-        {
-            var material = DB.CourseMaterialModels.FromSqlRaw<CourseMaterialModel>
-                ($"EXEC dbo.usp_CourseMaterialModel_DeletePath {PathOnServer}");
+            var material = DB.CourseMaterialModels.FromSqlRaw($"EXEC dbo.usp_CourseMaterialModel_Select_by_Course_Id {CourseId} ").ToList();
             return material;
         }
     }

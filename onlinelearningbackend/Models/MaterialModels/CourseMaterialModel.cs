@@ -11,11 +11,13 @@ namespace onlinelearningbackend.Models
     public class CourseMaterialModel 
     {
         public int Id { get; set; }
-        [Required]
+        public string FileName { get; set; }
         public string PathOnServer { get; set; }
         [ForeignKey("Course")]
         public int? CourseId { get; set; }
-        [Required]
+     
         public Course Course { get; set; }
+
+        public string Category { get; set; }
     }
 }
