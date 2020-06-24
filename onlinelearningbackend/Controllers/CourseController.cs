@@ -101,8 +101,8 @@ namespace onlinelearningbackend.Controllers
         }
 
         [HttpGet]
-        [Route("api/Course/GetCourses")]
-        public IActionResult GetAllCourses()
+        [Route("api/Course/GetExploreCourses")]
+        public IActionResult GetAllExploreCourses()
         {
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var c = _CourseManager.GetAllCourses();
