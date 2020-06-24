@@ -130,15 +130,25 @@ namespace onlinelearningbackend.Controllers
         }
 
 
-        [Route("api/Course/Enroll/{CourseId}")]
+        [Route("api/Course/Enroll/{CourseId}/{EnrollmentKey}")]
         // PUT: api/Course/5
-        [HttpPost("{CourseId}")]
-        public IActionResult PostEnrollStudent(int CourseId)
+        [HttpGet]
+        public IActionResult PostEnrollStudent(int CourseId,string EnrollmentKey)
         {
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
 
+            if (CourseId < 0)
+                return BadRequest();
+
+            var course = _CourseManager.CoursesByCourseId(CourseId);
+
+            if (course.EnrollmentKey != EnrollmentKey)
+                return Unauthorized();
+            
+
             _CourseManager.EnrollStudentInCourse(CourseId, UserId);
-            return Ok();
+            string res = "enrolled";
+            return Ok(res);
         }
     }
 }

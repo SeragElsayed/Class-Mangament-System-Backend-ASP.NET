@@ -15,13 +15,13 @@ namespace onlinelearningbackend.Manager
         {
             DB = _DB;
         }
-        public IEnumerable<TextMaterial> AddMaterial(TextMaterial NewMaterial)
+        public TextMaterial AddMaterial(TextMaterial NewMaterial)
         {
            var material=DB.TextMaterials.FromSqlRaw("EXEC dbo.usp_TextMaterials_Insert {0},{1},{2}"
                                                 , NewMaterial.TextMaterialName
                                                 ,NewMaterial.URL
                                                 ,NewMaterial.CourseId
-                                                );
+                                                ).ToList().FirstOrDefault();
             return material;
 
 
