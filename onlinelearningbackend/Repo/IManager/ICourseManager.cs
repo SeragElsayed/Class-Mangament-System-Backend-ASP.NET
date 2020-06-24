@@ -18,6 +18,7 @@ namespace onlinelearningbackend.DAL
         IEnumerable<Course> EditCourse(Course EditedCourse, string UserId, int TrackId);
         void DeleteCoursesByCourseId(int CourseId);
         void EnrollStudentInCourse(int CourseId, string StudentId);
+        CourseMyUserModel IsUserEnrolled(int CourseId, string StudentId);
 
     }
 }
