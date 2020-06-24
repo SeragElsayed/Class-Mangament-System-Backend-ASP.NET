@@ -71,12 +71,11 @@ namespace onlinelearningbackend.Controllers
                 filename = uploader.EnsureCorrectFilename(filename);
 
                 var PathToBeSavedInDB = uploader.GetPathAndFilename(filename);
-                var PathOnServer= Path.Combine(this.hostingEnvironment.WebRootPath + @"\uploads\" + filename);
 
-                using (FileStream output = System.IO.File.Create(PathOnServer))
+                using (FileStream output = System.IO.File.Create(PathToBeSavedInDB))
                     await source.CopyToAsync(output);
 
-                var cm = ProjectMaterialManager.AddMaterial(ProjectId, PathToBeSavedInDB,Category);
+                var cm = ProjectMaterialManager.AddMaterial(ProjectId, PathToBeSavedInDB,Category,filename);
                 AllMaterial.Add(cm);
             }
             return Ok(AllMaterial);
@@ -101,7 +100,7 @@ namespace onlinelearningbackend.Controllers
         public async Task<IActionResult> DownloadProjectMaterial(string FileName)
         {
 
-            var _Path =Path.Combine( this.hostingEnvironment.WebRootPath + @"\uploads\" + FileName);
+            var _Path = this.hostingEnvironment.WebRootPath + @"\uploads\" + FileName;
             var memory = new MemoryStream();
             using (var stream = new FileStream(_Path, FileMode.Open))
             {
@@ -114,27 +113,16 @@ namespace onlinelearningbackend.Controllers
 
         [HttpGet]
         [Route("api/ProjectMaterial/Download/Id/{MaterialId}")]
-        public async Task<IActionResult> DownloadProjectMaterialByMatrialId(int MaterialId)
+        public byte[] DownloadProjectMaterialByMatrialId(int MaterialId)
         {
-            var material = ProjectMaterialManager.GetMaterialByMaterialId(MaterialId);
-            if (material == null)
-                return BadRequest();
 
-             var _Path = Path.Combine(this.hostingEnvironment.WebRootPath + @"\uploads\" + material.PathOnServer);
-            // var _Path = "D:\\tttttttttt\\backend latest\\onlinelearningbackend\\" + material.PathOnServer;
-            //var memory = new MemoryStream(); 
-            var DoesFileExists = System.IO.File.Exists(_Path);
-            //using (var stream = new FileStream(_Path, FileMode.Open))
-            //using (var stream = System.IO.File.ReadAllBytes(_Path))
-            //{
-            //    await stream.CopyToAsync(memory);
-            //}
-            byte[] fileBytes = System.IO.File.ReadAllBytes(_Path).ToArray();
-            // memory.Position = 0;
-            // var ext = Path.GetExtension(_Path).ToLowerInvariant();
-            // return File(memory, GetMimeTypes()[ext], Path.GetFileName(_Path));
-            var f = File(fileBytes, "application/octet-stream", material.PathOnServer);
-            return Ok(new { file = f, fileName = material.PathOnServer });
+                var mat = ProjectMaterialManager.GetMaterialByMaterialId(MaterialId);
+                string filePath = mat.PathOnServer;// Directory.GetCurrentDirectory() + "\\Uploads\\" + url;
+
+
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                return fileBytes;
         }
 
 
@@ -155,7 +143,7 @@ namespace onlinelearningbackend.Controllers
             if (material == null)
                 return BadRequest();
 
-            var _Path = this.hostingEnvironment.WebRootPath + @"\uploads\" + material.PathOnServer;
+            var _Path = material.PathOnServer;
 
             if (_Path == null)
             {

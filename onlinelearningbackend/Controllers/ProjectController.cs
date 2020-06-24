@@ -17,11 +17,13 @@ namespace onlinelearningbackend.Controllers
     public class ProjectController : ControllerBase
     {
         IProjectManager ProjectManager;
+        IUserProjectManager ProjectUserManager;
         private readonly UserManager<MyUserModel> _userManager;
-        public ProjectController(IProjectManager _PM, UserManager<MyUserModel> userManager)
+        public ProjectController(IProjectManager _PM, UserManager<MyUserModel> userManager,IUserProjectManager _PUM)
         {
             ProjectManager = _PM;
             _userManager = userManager;
+            ProjectUserManager = _PUM;
         }
 
 
@@ -95,14 +97,29 @@ namespace onlinelearningbackend.Controllers
         {
             string StudentId = User.Claims.First(c => c.Type == "UserId").Value;
             var Projects = ProjectManager.GetProjectByStudentId(StudentId);
-
             if (Projects == null)
+                return NotFound();
+
+            List<Object> StudentProjects = new List<Object>();
+
+            foreach (var project in Projects)
+            {
+
+                var userproject = ProjectUserManager.GetUserProjectIdByStudentIdAndProjectId(StudentId, project.ProjectModelId);
+                if (userproject == null)
+                    continue;
+
+                StudentProjects.Add(new { project, userproject });
+
+            }
+
+            if (StudentProjects == null)
             {
                 return NotFound();
             }
             else
             {
-                return Ok(Projects);
+                return Ok(StudentProjects);
             }
 
         }

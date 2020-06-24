@@ -194,12 +194,16 @@ namespace onlinelearningbackend.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("CourseId")
-                        .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PathOnServer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -407,8 +411,10 @@ namespace onlinelearningbackend.Migrations
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PathOnServer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ProjectId")
@@ -695,9 +701,7 @@ namespace onlinelearningbackend.Migrations
                 {
                     b.HasOne("onlinelearningbackend.Models.Course", "Course")
                         .WithMany("CourseMaterialModels")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
                 });
 
             modelBuilder.Entity("onlinelearningbackend.Models.CourseMyUserModel", b =>

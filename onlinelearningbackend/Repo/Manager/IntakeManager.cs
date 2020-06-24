@@ -52,7 +52,15 @@ namespace onlinelearningbackend.Repo.Manager
                 return Intake;
             }
 
+       public Intake GetIntakeById(int IntakeId)
+        {
+            var Intake = db.Intakes.FromSqlRaw<Intake>("EXEC dbo.usp_Intakes_Select {0}", IntakeId)
+                                                                               .ToList().FirstOrDefault();
+            return Intake;
+        }
 
-        
+
+
+
     }
 }

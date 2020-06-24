@@ -11,7 +11,7 @@ namespace onlinelearningbackend.Models
     public class ProjectMaterialModel
     {
         public int ProjectMaterialModelId { get; set; }
-        [Required]
+        public string FileName { get; set; }
         public string PathOnServer { get; set; }
 
         [ForeignKey("Project")]

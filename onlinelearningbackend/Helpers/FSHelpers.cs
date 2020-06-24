@@ -10,6 +10,7 @@ namespace onlinelearningbackend.Helpers
 {
     public static class FSHelpers
     {
+
         private static string AllowedExtensions = "jpgpng";
         private static string AllowedExtensionsFiles = "ziprar";
         public static bool IsImageExtensionAllowed(string uploadedfilename)

@@ -41,17 +41,32 @@ namespace onlinelearningbackend.Controllers
 
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var c = _CourseManager.CoursesByStudentId(StudentId);
+
             return Ok(new { c });
         }
         // GET: api/Course
-        [HttpGet("{InstructorId}")]
-        [Route("api/Course/ByInstructorId/{InstructorId}")]
-        public IActionResult GetByInstructorId(string InstructorId)
+        [HttpGet]
+        [Route("api/Course/ByInstructorId")]
+        public IActionResult GetByInstructorId()
         {
-
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
-            var c = _CourseManager.CoursesByInstructorId(InstructorId);
-            return Ok(new { c });
+            var c = _CourseManager.GetAllCourses();
+            var courses = new List<object>();
+            foreach (var item in c)
+            {
+                var courseuser = _CourseManager.IsUserEnrolled(item.CourseId, UserId);
+                if (courseuser == null)
+                {
+                    continue;
+                 }
+                else
+                {
+                    courses.Add(new { item.CourseId, item.CourseMaterialModels, item.CourseMyUserModels, item.CourseName, item.Description, item.EnrollmentKey, IsEnrolled = true });
+
+                }
+
+            }
+            return Ok(courses);
         }
         // GET: api/Course
         [HttpGet("{TrackId}")]
@@ -89,9 +104,24 @@ namespace onlinelearningbackend.Controllers
         [Route("api/Course/GetCourses")]
         public IActionResult GetAllCourses()
         {
-
+            string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var c = _CourseManager.GetAllCourses();
-            return Ok(c);
+            var courses = new List<object>();
+            foreach (var item in c)
+            {
+                var courseuser = _CourseManager.IsUserEnrolled(item.CourseId, UserId);
+                if (courseuser == null)
+                {
+                    courses.Add(new { item.CourseId,item.CourseMaterialModels,item.CourseMyUserModels,item.CourseName,item.Description,item.EnrollmentKey,IsEnrolled=false });
+                }
+                else
+                {
+                    courses.Add(new { item.CourseId, item.CourseMaterialModels, item.CourseMyUserModels, item.CourseName, item.Description, item.EnrollmentKey, IsEnrolled = true });
+
+                }
+
+            }
+            return Ok(courses);
         }
 
 
@@ -130,15 +160,25 @@ namespace onlinelearningbackend.Controllers
         }
 
 
-        [Route("api/Course/Enroll/{CourseId}")]
+        [Route("api/Course/Enroll/{CourseId}/{EnrollmentKey}")]
         // PUT: api/Course/5
-        [HttpPost("{CourseId}")]
-        public IActionResult PostEnrollStudent(int CourseId)
+        [HttpGet]
+        public IActionResult PostEnrollStudent(int CourseId,string EnrollmentKey)
         {
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
 
+            if (CourseId < 0)
+                return BadRequest();
+
+            var course = _CourseManager.CoursesByCourseId(CourseId);
+
+            if (course.EnrollmentKey != EnrollmentKey)
+                return Ok(new { res = "wrong key" });
+
+
             _CourseManager.EnrollStudentInCourse(CourseId, UserId);
-            return Ok();
+          
+            return Ok(new { res="enrolled"});
         }
     }
 }
