@@ -27,6 +27,7 @@ namespace onlinelearningbackend.Helpers
         {
             var UniqueFileName = new Guid();
             string path = this.hostingEnvironment.WebRootPath + @"\uploads\";
+            //string path =  @"\uploads\";
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);

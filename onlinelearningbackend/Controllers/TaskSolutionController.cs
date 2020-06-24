@@ -164,6 +164,19 @@ namespace onlinelearningbackend.Controllers
             return response;
         }
 
-       
+        [HttpGet]
+        [Route("api/TaskSolution/Download/Id/{TaskSolutionId}")]
+        public byte[] DownloadTaskSolutionById(int TaskSolutionId)
+        {
+
+            var mat = TaskSolutionManager.GetTaskSolutionById(TaskSolutionId);
+            string filePath = mat.TaskSolutionURL;// Directory.GetCurrentDirectory() + "\\Uploads\\" + url;
+
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+            return fileBytes;
+        }
+
     }
     }

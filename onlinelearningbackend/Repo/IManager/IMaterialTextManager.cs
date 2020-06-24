@@ -9,7 +9,7 @@ namespace onlinelearningbackend.Manager
   public  interface IMaterialTextManager
     {
         IEnumerable<TextMaterial> MaterialTextByCourseId(int CourseId);
-        IEnumerable<TextMaterial> AddMaterial(TextMaterial NewMaterial);
+        TextMaterial AddMaterial(TextMaterial NewMaterial);
         IEnumerable<TextMaterial> EditMaterial(TextMaterial EditMaterial);
         IEnumerable<TextMaterial> DeleteMaterialByMaterialId(int MaterialId);
      
