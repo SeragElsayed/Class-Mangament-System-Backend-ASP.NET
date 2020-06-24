@@ -71,8 +71,9 @@ namespace onlinelearningbackend.Controllers
                 filename = uploader.EnsureCorrectFilename(filename);
 
                 var PathToBeSavedInDB = uploader.GetPathAndFilename(filename);
+                var PathOnServer= Path.Combine(this.hostingEnvironment.WebRootPath + @"\uploads\" + filename);
 
-                using (FileStream output = System.IO.File.Create(PathToBeSavedInDB))
+                using (FileStream output = System.IO.File.Create(PathOnServer))
                     await source.CopyToAsync(output);
 
                 var cm = ProjectMaterialManager.AddMaterial(ProjectId, PathToBeSavedInDB,Category);
@@ -100,7 +101,7 @@ namespace onlinelearningbackend.Controllers
         public async Task<IActionResult> DownloadProjectMaterial(string FileName)
         {
 
-            var _Path = this.hostingEnvironment.WebRootPath + @"\uploads\" + FileName;
+            var _Path =Path.Combine( this.hostingEnvironment.WebRootPath + @"\uploads\" + FileName);
             var memory = new MemoryStream();
             using (var stream = new FileStream(_Path, FileMode.Open))
             {
@@ -117,10 +118,10 @@ namespace onlinelearningbackend.Controllers
         {
             var material = ProjectMaterialManager.GetMaterialByMaterialId(MaterialId);
             if (material == null)
-                return BadRequest();//D:\tttttttttt\backend latest\onlinelearningbackend\aspAPIday2Task.txt
+                return BadRequest();
 
-            // var _Path = this.hostingEnvironment.WebRootPath+"\\" + material.PathOnServer;
-            var _Path = "D:\\tttttttttt\\backend latest\\onlinelearningbackend\\" + material.PathOnServer;
+             var _Path = Path.Combine(this.hostingEnvironment.WebRootPath + @"\uploads\" + material.PathOnServer);
+            // var _Path = "D:\\tttttttttt\\backend latest\\onlinelearningbackend\\" + material.PathOnServer;
             //var memory = new MemoryStream(); 
             var DoesFileExists = System.IO.File.Exists(_Path);
             //using (var stream = new FileStream(_Path, FileMode.Open))
