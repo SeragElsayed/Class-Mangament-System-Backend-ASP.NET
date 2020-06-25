@@ -101,8 +101,8 @@ namespace onlinelearningbackend.Controllers
         }
 
         [HttpGet]
-        [Route("api/Course/GetExploreCourses")]
-        public IActionResult GetAllExploreCourses()
+        [Route("api/Course/GetCourses")]
+        public IActionResult GetAllCourses()
         {
             string UserId = User.Claims.First(c => c.Type == "UserId").Value;
             var c = _CourseManager.GetAllCourses();
@@ -112,12 +112,32 @@ namespace onlinelearningbackend.Controllers
                 var courseuser = _CourseManager.IsUserEnrolled(item.CourseId, UserId);
                 if (courseuser == null)
                 {
-                    courses.Add(new { item.CourseId,item.CourseMaterialModels,item.CourseMyUserModels,item.CourseName,item.Description,item.EnrollmentKey,IsEnrolled=false });
+                    courses.Add(new { item.CourseId,
+                        item.CourseMaterialModels,
+                        item.CourseMyUserModels,
+                        item.CourseName,
+                        item.Description,
+                        item.EnrollmentKey,
+                        IsEnrolled=false,
+                        item.IntervalInDays,
+                        item.IsActive,
+                        item.TrackId});
                 }
                 else
                 {
-                    courses.Add(new { item.CourseId, item.CourseMaterialModels, item.CourseMyUserModels, item.CourseName, item.Description, item.EnrollmentKey, IsEnrolled = true });
-
+                    courses.Add(new
+                    {
+                        item.CourseId,
+                        item.CourseMaterialModels,
+                        item.CourseMyUserModels,
+                        item.CourseName,
+                        item.Description,
+                        item.EnrollmentKey,
+                        IsEnrolled = true,
+                        item.IntervalInDays,
+                        item.IsActive,
+                        item.TrackId
+                    });
                 }
 
             }
@@ -180,5 +200,14 @@ namespace onlinelearningbackend.Controllers
           
             return Ok(new { res="enrolled"});
         }
+        [HttpGet]
+        [Route("api/Course/GetExploreCourses")]
+        public IActionResult GetAllExploreCourses()
+        {
+         
+            var c = _CourseManager.GetAllCourses();
+            return Ok(c);
+        }
+
     }
 }
