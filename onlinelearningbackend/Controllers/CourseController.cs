@@ -123,6 +123,7 @@ namespace onlinelearningbackend.Controllers
                 var courseuser = _CourseManager.IsUserEnrolled(item.CourseId, UserId);
                 if (courseuser == null)
                 {
+
                     courses.Add(new
                     {
                         item.CourseId,
@@ -218,7 +219,6 @@ namespace onlinelearningbackend.Controllers
         [Route("api/Course/GetExploreCourses")]
         public IActionResult GetAllExploreCourses()
         {
-
             var c = _CourseManager.GetAllCourses();
             return Ok(c);
         }

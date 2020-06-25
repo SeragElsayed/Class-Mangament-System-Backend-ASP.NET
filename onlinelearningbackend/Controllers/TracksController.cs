@@ -46,7 +46,7 @@ namespace onlinelearningbackend.Controllers
             if (TrackId < 1)
                 return BadRequest();
 
-            var Trackes = TrackManager.GetTrackByTrackId(TrackId);
+            var Trackes = TrackManager.GetAllTracksByTrackId(TrackId);
 
             if (Trackes == null)
                 return NotFound();

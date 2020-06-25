@@ -52,7 +52,7 @@ namespace onlinelearningbackend.Repo.Manager
 
         public Track GetAllTracksByTrackId(int TrackId)
         {
-            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Tracks_Track_Id {TrackId}").ToList<Track>().FirstOrDefault();
+            var track = db.Tracks.FromSqlRaw<Track>($"EXEC dbo.usp_Track_Track_Id {TrackId}").ToList<Track>().FirstOrDefault();
             return track;
         }
     }
