@@ -16,6 +16,14 @@ namespace onlinelearningbackend.Manager
             DB = _DB;
         }
 
+
+       public IEnumerable<TaskSolution> GetTaskSolutionByTaskId(int TaskId)
+        {
+            var TaskSolution = DB.TaskSolutions.FromSqlRaw("EXEC dbo.usp_TaskSolutions_Select_Task_Id {0}",
+                                                  TaskId).ToList<TaskSolution>();
+            return TaskSolution;
+        }
+
         public TaskSolution AddTaskByStudent( TaskSolution newTaskSolution)
         {
             var TaskSolution = DB.TaskSolutions.FromSqlRaw("EXEC dbo.usp_TaskSolutions_Insert {0},{1},{2},{3},{4}",

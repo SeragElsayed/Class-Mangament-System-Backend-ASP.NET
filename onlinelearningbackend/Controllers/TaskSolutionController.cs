@@ -11,6 +11,7 @@ using Magnum.FileSystem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using onlinelearningbackend.Helpers;
@@ -26,10 +27,14 @@ namespace onlinelearningbackend.Controllers
         // ITaskSolutionManager db;
         private IWebHostEnvironment hostingEnvironment;
         ITaskSolutionManager TaskSolutionManager;
-        public TaskSolutionController(ITaskSolutionManager _TSM, IWebHostEnvironment hostingEnvironment)
+
+        private readonly UserManager<MyUserModel> _userManager;
+        public TaskSolutionController(ITaskSolutionManager _TSM, IWebHostEnvironment hostingEnvironment,
+        UserManager<MyUserModel> userManager)
         {
             this.TaskSolutionManager = _TSM;
             this.hostingEnvironment = hostingEnvironment;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -43,6 +48,40 @@ namespace onlinelearningbackend.Controllers
             //return the file in that url path to the user
             return Ok();
         }
+
+        [HttpGet]
+        [Route("api/course/tasksStd/names/{TaskId}")]
+        public async Task<IActionResult> GetStudentNameUploadedSolution(int TaskId)
+        {
+            var taskSolutions = TaskSolutionManager.GetTaskSolutionByTaskId(TaskId);
+            var studentUploadedSolutions = new List<MyUserModel>();
+            foreach (var item in taskSolutions)
+            {
+
+                var student = await _userManager.FindByIdAsync(item.MyUserModelId);
+                if (student == null)
+                    continue;
+
+                if (studentUploadedSolutions.Contains(student))
+                    continue;
+
+                studentUploadedSolutions.Add(student);
+            }
+
+            return Ok(studentUploadedSolutions);
+        }
+
+
+        [HttpGet]
+        [Route("api/course/tasksStd/perstudent/{TaskId}/{StudentId}")]
+        public  IActionResult gettasksolutionbytaskidandstudentid(int TaskId,string StudentId)
+        {
+            var taskSolutions = TaskSolutionManager.GetTaskSolutionByStudentId(StudentId,TaskId);
+            
+
+            return Ok(taskSolutions);
+        }
+
 
 
         [HttpGet]
