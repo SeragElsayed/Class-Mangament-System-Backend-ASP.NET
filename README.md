@@ -18,5 +18,8 @@ users can create project and control CRUD operations of project's details, mater
 - MS SQL Server  (deployed on Azure Cloud).
 - ASP.NET Identity.
 
+### Frontend Technologies.
+- Angular 9.
+- Bootstrap.
 
 
